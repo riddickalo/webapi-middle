@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "axios": "^1.7.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "env-cmd": "^10.1.0",
+    "express": "^4.19.2",
+    "http": "^0.0.1-security",
+    "node-dev": "^8.0.0",
+    "node-schedule": "^2.1.1"
+  },
+  "type": "module",
+  "name": "webapi-middle-server",
+  "version": "v0.0.1",
+  "main": "app.mjs",
+  "scripts": {
+    "dev-start": "env-cmd -f .env.developement node-dev app.mjs",
+    "start": "env-cmd -f .env.production node app.mjs"
+  },
+  "license": "MIT"
+}

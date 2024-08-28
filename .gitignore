@@ -1,0 +1,9 @@
+# temp
+server/
+
+# env
+.env.developement
+
+# dependency
+package-lock.json
+node_modules/
