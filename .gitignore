@@ -2,7 +2,7 @@
 server/
 
 # env
-.env.developement
+.env.development
 
 # dependency
 package-lock.json

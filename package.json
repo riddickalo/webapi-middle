@@ -14,8 +14,9 @@
   "version": "v0.0.1",
   "main": "app.mjs",
   "scripts": {
-    "dev-start": "env-cmd -f .env.developement node-dev app.mjs",
-    "start": "env-cmd -f .env.production node app.mjs"
+    "loadenv-dev-start": "env-cmd -f .env.development npm run dev-start",
+    "dev-start": "node-dev ./src/app.mjs",
+    "start": "env-cmd -f .env.production node ./src/app.mjs"
   },
   "license": "MIT"
 }
