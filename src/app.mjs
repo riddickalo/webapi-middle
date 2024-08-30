@@ -1,6 +1,4 @@
 import express from 'express';
-// import path from 'path';
-// import { fileURLToPath } from 'url';
 import { createServer } from 'http';
 import { config } from './config/index.mjs';
 import info_routes from './routes/info.mjs';

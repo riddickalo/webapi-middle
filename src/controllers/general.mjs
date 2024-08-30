@@ -1,6 +1,8 @@
 import pckInfo from '../../package.json' assert { type: 'json' };
 import path from 'path';
 
+const __dirname = path.resolve();
+
 export async function greeting(req, res) {
     res.send('Hello world~');
 };
@@ -15,6 +17,6 @@ export async function getVersion(req, res) {
 };
 
 export async function getViews(req, res) {
-    console.log(path.join(process.cwd(), 'src/views/index.html'));
-    res.sendFile(path.join(process.cwd(), 'src/views/index.html'));
+    console.log(path.join(__dirname, 'src/views/index.html'));
+    res.sendFile(path.join(__dirname, 'src/views/index.html'));
 }

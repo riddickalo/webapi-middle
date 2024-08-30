@@ -1,8 +1,9 @@
 # temp
 server/
+src/views/
 
 # env
-.env.development
+.env.dev
 
 # dependency
 package-lock.json
