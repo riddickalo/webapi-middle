@@ -10,13 +10,17 @@ Nc_Info.init(
             primaryKey: true,
             allowNull: false,
         },
+        nc_ip: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         region: {   
             type: DataTypes.STRING,
             allowNull: true,
         },
         prod_line: {
             type: DataTypes.STRING,
-            allowNull:true,
+            allowNull: true,
         },
         station: {          // 工作站
             type: DataTypes.STRING,
@@ -24,7 +28,7 @@ Nc_Info.init(
         },
         opStatus: {         // 運行狀態
             type: DataTypes.STRING,
-            defaultValue: 'offline'
+            defaultValue: 'offline',
         },
         ncfile: {
             type: DataTypes.STRING,
@@ -37,7 +41,11 @@ Nc_Info.init(
         utilize_rate: {     // 稼動率
             type: DataTypes.INTEGER,
             defaultValue: 0,
-        }
+        },
+        // timeMark: {
+        //     tpye: DataTypes.DATE,
+        //     allowNull: true,
+        // }
     },
     {
         sequelize: orm_agent,

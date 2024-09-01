@@ -24,6 +24,9 @@ Prod_Record.init(
         nc_id: {
             type: DataTypes.STRING,
         },
+        ncfile: {
+            type: DataTypes.STRING,
+        },
         region: {
             type: DataTypes.STRING,
             allowNull: true,
@@ -34,6 +37,18 @@ Prod_Record.init(
         },
         prod_line: {
             type: DataTypes.STRING,
+            allowNull: true,
+        },
+        startTime: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        endTime: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        duration: {
+            type: DataTypes.INTEGER,
             allowNull: true,
         }
     },
