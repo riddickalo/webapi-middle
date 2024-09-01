@@ -7,7 +7,7 @@ const demoData = [
     createData('總部', 'RG', '平測磨', 'SG-500-1', 'idle', 'G100', false, 43),
     createData('一廠', 'MG', '內溝研磨', 'GI-700-4', 'running', 'O991', true, 88),
     createData('一廠', 'MG', '關節手臂', 'Fanuc M-800i', 'running', 'Main.tch', false, 91),
-    createData('二廠', 'EG', '裝配', 'GI-700-3', 'idle', 'O999', false, 60),
+    createData('二廠', 'EG', '裝配', 'GI-700-6', 'idle', 'O999', false, 60),
 ];
 
 export async function getStatus(req, res) {

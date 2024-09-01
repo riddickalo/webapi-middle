@@ -1,6 +1,7 @@
 # temp
 server/
 src/views/
+device_events.json
 
 # env
 .env.dev
