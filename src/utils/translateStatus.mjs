@@ -1,8 +1,3 @@
-// 計算產量
-export function calProd() {
-    
-}
-
 // 轉換運行狀態
 export function getOpStatus(rawData) {
     if(rawData.connected === 0){
@@ -23,7 +18,7 @@ export function getOpStatus(rawData) {
 }
 
 // 轉換廠區
-export function getRegion(rawData) {
+export function setRegion(rawData) {
 
 }
 

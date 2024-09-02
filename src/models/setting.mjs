@@ -10,6 +10,14 @@ Setting.init(
             primaryKey: true,
             defaultValue: true,
         },
+        current_user: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        polling_interval: {
+            type: DataTypes.INTEGER,
+            defaultValue: 60,
+        },
         sys_ln: {               // 系統語系
             type: DataTypes.STRING,
             defaultValue: '繁體中文',

@@ -2,7 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { config } from './config/index.mjs';
 import info_routes from './routes/info.mjs';
-import api_routes from './routes/machine.mjs';
+import api_routes from './routes/api.mjs';
 import view_routes from './routes/view.mjs';
 import cors from 'cors';
 // import './bin/www.mjs';
@@ -16,7 +16,7 @@ middle_app.use(express.urlencoded({ extended: true }));
 middle_app.use(cors(config.corsOption));
 
 middle_app.use('/version', info_routes);
-middle_app.use('/machine', api_routes);
+middle_app.use('/api', api_routes);
 middle_app.use('/views', view_routes);
 
 const PORT = config.port;

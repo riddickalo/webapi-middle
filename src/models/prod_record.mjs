@@ -21,6 +21,10 @@ Prod_Record.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
+        prod_status: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
         nc_id: {
             type: DataTypes.STRING,
         },

@@ -1,7 +1,9 @@
 import fs from 'fs';
 import axios from 'axios';
 import Nc_Info from '../models/nc_info.mjs';
-import { getOpStatus } from './translateStatus.mjs';
+import { insertProd } from './setProd.mjs';
+import { getUtilize } from './utilize.mjs';
+import { getOpStatus } from '../utils/translateStatus.mjs';
 import { __dirname } from '../config/index.mjs';
 
 export async function getDeviceEvents() {
@@ -18,17 +20,23 @@ export async function getDeviceEvents() {
     await axios.get(process.env.FOCAS_URL, { params: {startTime: startTime} })
         .then(async ({data, }) => {
             for(let row of data) {
+                const rowStatus = getOpStatus(row);
                 await Nc_Info.findOrCreate({
                     where: { nc_id: row.deviceName },
                     defaults: {
                         ncfile: row.exeProgName,
-                        opStatus: getOpStatus(row),
+                        opStatus: rowStatus,
                         nc_ip: row.hostname,
+                        running_flag: row.running,
                     }
-                }).then(([res, ifNew]) => {
+                }).then(async ([res, ifNew]) => {
                     if(!ifNew) {
+                        if(res.running_flag !== row.running) {
+                            await insertProd(res, row);
+                            res.running_flag = row.running;
+                        }
                         res.ncfile = row.exeProgName,
-                        res.opStatus = getOpStatus(row),
+                        res.opStatus = rowStatus,
                         res.nc_ip = row.hostname;
                         res.save();
                     }
@@ -36,20 +44,46 @@ export async function getDeviceEvents() {
             }
         }).catch((err) => {console.error(err); res.status(404).send(err);});
 }
+
+export async function updateUtilize() {
+    await Nc_Info.findAll()
+        .then(async (nc_list) => {
+            const currTime = new Date();
+            for (let nc of nc_list) {
+                await getUtilize(nc, currTime)
+                    .then((rate) => {
+                        console.log(rate);
+                        nc.utilize_rate = rate;
+                        nc.save()
+                    });
+            }
+        }).catch(err => console.error(err));
+}
+
 // import testData from '../../device_events.json' assert {type: 'json'};
 // export async function getDeviceEvents() {
 //     for(let row of testData) {
+//         const rowStatus = getOpStatus(row);
 //         await Nc_Info.findOrCreate({
 //             where: { nc_id: row.deviceName },
 //             defaults: {
 //                 ncfile: row.exeProgName,
-//                 opStatus: getOpStatus(row),
+//                 opStatus: rowStatus,
 //                 nc_ip: row.hostname,
+//                 running_flag: row.running,
 //             }
-//         }).then(([res, ifNew]) => {
+//         }).then(async ([res, ifNew]) => {
 //             if(!ifNew) {
-//                 res.nc_ip = row.hostname;
+//                 if(res.running_flag !== row.running) {
+//                     await insertProd(res, row);
+//                     res.running_flag = row.running;
+//                 }
+//                 res.ncfile = row.exeProgName,
+//                 res.opStatus = rowStatus,
+//                 res.nc_ip = row.hostname;  
 //                 res.save();
+//             } else {
+//                 await insertProd(res, row, true);
 //             }
 //         }).catch((err) => console.error(err));
 //     }

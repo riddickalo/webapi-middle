@@ -5,6 +5,8 @@ import { getStatus } from "../controllers/nc_status.mjs";
 const router = express.Router();
 
 router.all('/', greeting);
-router.all('/status', getStatus);
+router.get('/status', getStatus);
+router.get('/alarm', () => console.log('alarm api'));
+router.get('/setting', () => console.log('setting api'))
 
 export default router;

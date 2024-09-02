@@ -30,6 +30,9 @@ Nc_Info.init(
             type: DataTypes.STRING,
             defaultValue: 'offline',
         },
+        running_flag: {     // running狀態紀錄
+            type: DataTypes.INTEGER,
+        },
         ncfile: {
             type: DataTypes.STRING,
             allowNull: true,

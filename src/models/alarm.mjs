@@ -21,6 +21,14 @@ Alarm.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
+        alarm_type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        alarm_msg: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         alarm_timestamp: {
             type: DataTypes.DATE,
         }
