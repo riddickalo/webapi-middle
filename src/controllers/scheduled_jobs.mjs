@@ -52,7 +52,7 @@ export async function updateUtilize() {
             for (let nc of nc_list) {
                 await getUtilize(nc, currTime)
                     .then((rate) => {
-                        console.log(rate);
+                        // console.log(rate);
                         nc.utilize_rate = rate;
                         nc.save()
                     });

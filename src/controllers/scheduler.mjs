@@ -14,8 +14,10 @@ Focas_syncRule.second = (() => {
     return rule; 
 })();
 
-const Focas_syncJob = scheduler.scheduleJob(Focas_syncRule, 
-    () => getDeviceEvents());
+if(process.env.DEV_ENV !== 'local'){
+    const Focas_syncJob = scheduler.scheduleJob(Focas_syncRule, 
+        () => getDeviceEvents());
+}
 
 // 更新稼動率
 // FOCAS 更新資料頻率

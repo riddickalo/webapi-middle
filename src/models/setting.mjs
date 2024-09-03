@@ -14,9 +14,9 @@ Setting.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        polling_interval: {
+        refresh_interval: {
             type: DataTypes.INTEGER,
-            defaultValue: 60,
+            defaultValue: 10,
         },
         sys_ln: {               // 系統語系
             type: DataTypes.STRING,
@@ -44,7 +44,7 @@ Setting.init(
         },
         line_date_token: {
             type: DataTypes.STRING,
-            defaultValue: '37v9RzV9SWv7pHEYHEkzzYGwmoeDeLDdn3Hw1iOQaj3',
+            allowNull: true,
         },
         line_date_time: {
             type: DataTypes.STRING,
