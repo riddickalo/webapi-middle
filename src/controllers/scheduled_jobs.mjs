@@ -32,7 +32,7 @@ export async function getDeviceEvents() {
                 }).then(async ([res, ifNew]) => {
                     if(!ifNew) {
                         if(res.running_flag !== row.running) {
-                            await insertProd(res, row);
+                            await insertProd(res, row, rowStatus);
                             res.running_flag = row.running;
                         }
                         res.ncfile = row.exeProgName,
@@ -60,6 +60,7 @@ export async function updateUtilize() {
         }).catch(err => console.error(err));
 }
 
+/* Test GET data */
 // import testData from '../../device_events.json' assert {type: 'json'};
 // export async function getDeviceEvents() {
 //     for(let row of testData) {
@@ -75,7 +76,7 @@ export async function updateUtilize() {
 //         }).then(async ([res, ifNew]) => {
 //             if(!ifNew) {
 //                 if(res.running_flag !== row.running) {
-//                     await insertProd(res, row);
+//                     await insertProd(res, row, rowStatus);
 //                     res.running_flag = row.running;
 //                 }
 //                 res.ncfile = row.exeProgName,
@@ -83,7 +84,7 @@ export async function updateUtilize() {
 //                 res.nc_ip = row.hostname;  
 //                 res.save();
 //             } else {
-//                 await insertProd(res, row, true);
+//                 await insertProd(res, row, rowStatus, true);
 //             }
 //         }).catch((err) => console.error(err));
 //     }
