@@ -2,11 +2,26 @@ import Nc_Info from "../models/nc_info.mjs";
 
 export async function getStatus(req, res) {
     // res.status(200).send(demoData);
-    await Nc_Info.findAll({ order: [['nc_id', 'DESC']] })
+    await Nc_Info.findAll({ order: [['nc_id', 'ASC']] })
         .then((ret_data) => {
             res.status(200).send(ret_data);
         }).catch(({original, }) => {
             res.status(404).send(original.error);
+        });
+}
+
+export async function setNcAttr(req, res) { // 一次僅設定一筆
+    console.log(req.body);
+
+    await Nc_Info.findByPk(req.body.nc_id)
+        .then(async (ret) => {
+            ret.region = req.body.region;
+            ret.prod_line = req.body.prod_line;
+            ret.station = req.body.station;
+            await ret.save().then(() => getStatus(req, res))
+                            .catch(err => res.status(500).send(err));
+        }).catch(err => {
+            res.status(404).send(err)
         });
 }
 
