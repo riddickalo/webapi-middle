@@ -30,7 +30,7 @@ Utilize_updateRule.minute = (() => {
     } 
     return rule; 
 })();
-
-const Utilize_updateJob = scheduler.scheduleJob(Utilize_updateRule, 
-    () => updateUtilize());
-
+if(process.env.DEV_ENV !== 'local'){
+    const Utilize_updateJob = scheduler.scheduleJob(Utilize_updateRule, 
+        () => updateUtilize());
+}

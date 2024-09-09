@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import { config } from './config/index.mjs';
 import api_routes from './routes/api.mjs';
 import view_routes from './routes/view.mjs';
+import report_routes from './routes/report.mjs'
 import cors from 'cors';
 // import './bin/www.mjs';
 import './models/model_init.mjs';
@@ -16,6 +17,7 @@ middle_app.use(cors(config.corsOption));
 
 middle_app.use('/api', api_routes);
 middle_app.use('/views', view_routes);
+middle_app.use('/report', report_routes)
 
 const PORT = config.port;
 
