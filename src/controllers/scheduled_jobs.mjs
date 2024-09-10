@@ -1,10 +1,11 @@
 import fs from 'fs';
 import axios from 'axios';
 import Nc_Info from '../models/nc_info.mjs';
-import { insertProd } from './setProd.mjs';
+import { updateProd } from './setProd.mjs';
 import { getUtilize } from './utilize.mjs';
 import { getOpStatus } from '../utils/translateStatus.mjs';
 import { __dirname } from '../config/index.mjs';
+import { createAlarm, closeAlarm } from './setAlarm.mjs';
 
 export async function getDeviceEvents() {
     // let time = new Date();
@@ -31,10 +32,21 @@ export async function getDeviceEvents() {
                     }
                 }).then(async ([res, ifNew]) => {
                     if(!ifNew) {
+                        // listen running flag
                         if(res.running_flag !== row.running) {
-                            await insertProd(res, row, rowStatus);
+                            await updateProd(res, row, rowStatus);
                             res.running_flag = row.running;
                         }
+                        // listen alarm & emergency status
+                        if((row.alarm === 1 && res.opStatus !== 'alarm') || 
+                            (row.emergency === 1 && res.opStatus !== 'warning')) {
+                                await createAlarm(row, rowStatus);
+                        }
+                        if((row.alarm === 0 && res.opStatus === 'alarm') || 
+                            (row.emergency === 0 && res.opStatus === 'warning')) {
+                                await closeAlarm(res);
+                        }
+
                         res.ncfile = row.exeProgName,
                         res.opStatus = rowStatus,
                         res.nc_ip = row.hostname;
@@ -63,7 +75,8 @@ export async function updateUtilize() {
 /* Test GET data */
 // import testData from '../../device_events.json' assert {type: 'json'};
 // export async function getDeviceEvents() {
-//     for(let row of testData) {
+//     const selected = testData.slice(0);
+//     for(let row of selected) {
 //         const rowStatus = getOpStatus(row);
 //         await Nc_Info.findOrCreate({
 //             where: { nc_id: row.deviceName },
@@ -76,15 +89,26 @@ export async function updateUtilize() {
 //         }).then(async ([res, ifNew]) => {
 //             if(!ifNew) {
 //                 if(res.running_flag !== row.running) {
-//                     await insertProd(res, row, rowStatus);
+//                     await updateProd(res, row, rowStatus);
 //                     res.running_flag = row.running;
+//                 }
+//                 // listen alarm & emergency status
+//                 if((row.alarm === 1 && res.opStatus !== 'alarm') || 
+//                     (row.emergency === 1 && res.opStatus !== 'warning')) {
+//                     console.log('creating an alarm');
+//                     await createAlarm(row, rowStatus);
+//                 }
+//                 if((row.alarm === 0 && res.opStatus === 'alarm') || 
+//                     (row.emergency === 0 && res.opStatus === 'warning')) {
+//                     console.log('closing an alarm');
+//                     await closeAlarm(res);
 //                 }
 //                 res.ncfile = row.exeProgName,
 //                 res.opStatus = rowStatus,
 //                 res.nc_ip = row.hostname;  
 //                 res.save();
 //             } else {
-//                 await insertProd(res, row, rowStatus, true);
+//                 await updateProd(res, row, rowStatus, true);
 //             }
 //         }).catch((err) => console.error(err));
 //     }

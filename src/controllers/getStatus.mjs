@@ -1,4 +1,5 @@
 import Nc_Info from "../models/nc_info.mjs";
+import Alarm from "../models/alarm.mjs";
 
 export async function getStatus(req, res) {
     // res.status(200).send(demoData);
@@ -23,6 +24,29 @@ export async function setNcAttr(req, res) { // 一次僅設定一筆
         }).catch(err => {
             res.status(404).send(err)
         });
+}
+
+export async function getAlarm(req, res) {
+    try{
+        let retData;
+        if(req.params.type === 'current') {
+            retData = await Alarm.findAll({
+                where: { history_flag: false },
+                order: [['alarm_timestamp', 'DESC']],
+                include: [{ model: Nc_Info }],
+            });
+        } else if(req.params.type === 'history') {
+            retData = await Alarm.findAll({
+                where: { history_flag: true },
+                order: [['alarm_timestamp', 'DESC']],
+                include: [{ model: Nc_Info }],
+            });
+        }
+        res.status(200).send(retData);
+    } catch(err) {
+        console.error(err);
+        res.status(400).send(err);
+    }        
 }
 
 

@@ -5,7 +5,7 @@ import Prod_Record from "../models/prod_record.mjs";
 prevData: Prod_Record
 currData: FOCAS return format
 */
-export async function insertProd(prevData, currData, currStatus, test=false) {
+export async function updateProd(prevData, currData, currStatus, test=false) {
     if(test) {
         retData = await Prod_Record.create({
             nc_id: prevData.nc_id,
@@ -25,7 +25,6 @@ export async function insertProd(prevData, currData, currStatus, test=false) {
                     order:[['startTime', 'DESC']],
                     limit: 1,
                 }).then(async (records) => {
-                    console.log(records)
                     for(let res of records) {
                         if(currStatus === 'idle') {
                             res.prod_status = 1;

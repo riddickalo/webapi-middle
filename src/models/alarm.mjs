@@ -1,5 +1,6 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model, BelongsTo } from "sequelize";
 import orm_agent from "./orm_agent.mjs";
+import Nc_Info from "./nc_info.mjs";
 
 export default class Alarm extends Model {}
 
@@ -13,14 +14,6 @@ Alarm.init(
         nc_id: {
             type: DataTypes.STRING,
         },
-        region: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        station: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
         alarm_type: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -31,8 +24,11 @@ Alarm.init(
         },
         alarm_timestamp: {
             type: DataTypes.DATE,
+        },
+        history_flag: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
         }
-
     },
     {
         sequelize: orm_agent,
@@ -40,4 +36,10 @@ Alarm.init(
         timestamps: true,
         updatedAt: false,
     }
-)
+);
+
+Alarm.belongsTo(Nc_Info, {
+    foreignKey: 'nc_id',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+});

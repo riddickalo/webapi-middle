@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 import orm_agent from "./orm_agent.mjs";
+import Nc_Info from "./nc_info.mjs";
 
 export default class Prod_Record extends Model {}
 
@@ -25,24 +26,6 @@ Prod_Record.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        nc_id: {
-            type: DataTypes.STRING,
-        },
-        ncfile: {
-            type: DataTypes.STRING,
-        },
-        region: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        station: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        prod_line: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
         startTime: {
             type: DataTypes.DATE,
             allowNull: true,
@@ -62,4 +45,10 @@ Prod_Record.init(
         timestamps: true,
         updatedAt: false,
     },
-)
+);
+
+Prod_Record.belongsTo(Nc_Info, {
+    foreignKey: 'nc_id',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+});

@@ -22,6 +22,7 @@ if(process.env.DEV_ENV !== 'local'){
 // 更新稼動率
 // FOCAS 更新資料頻率
 const Utilize_updateRule = new scheduler.RecurrenceRule();
+Utilize_updateRule.second = 3;
 Utilize_updateRule.minute = (() => {
     let rule = [];
     const period = Number(process.env.UTILIZE_POLL_INTERVAL) || 1;
@@ -30,6 +31,7 @@ Utilize_updateRule.minute = (() => {
     } 
     return rule; 
 })();
+
 if(process.env.DEV_ENV !== 'local'){
     const Utilize_updateJob = scheduler.scheduleJob(Utilize_updateRule, 
         () => updateUtilize());
