@@ -54,7 +54,7 @@ export async function getDeviceEvents() {
                     }
                 }).catch((err) => console.error(err));
             }
-        }).catch((err) => {console.error(err); res.status(404).send(err);});
+        }).catch((err) => console.error(err));
 }
 
 export async function updateUtilize() {
