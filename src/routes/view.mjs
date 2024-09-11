@@ -1,6 +1,6 @@
 import express from 'express';
-import { getViews } from '../controllers/sysInfo.mjs';
+import { getViews } from '../controllers/serveViews.mjs';
 
 const router = express.Router();
-router.all('/', getViews);
+router.get('*', getViews);
 export default router;

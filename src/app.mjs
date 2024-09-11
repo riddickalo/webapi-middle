@@ -1,10 +1,11 @@
 import express from 'express';
 import { createServer } from 'http';
-import { config } from './config/index.mjs';
+import { config, __dirname } from './config/index.mjs';
 import api_routes from './routes/api.mjs';
 import view_routes from './routes/view.mjs';
 import report_routes from './routes/report.mjs'
 import cors from 'cors';
+import path from 'path';
 // import './bin/www.mjs';
 import './models/model_init.mjs';
 import './controllers/scheduler.mjs';
@@ -15,8 +16,10 @@ middle_app.use(express.json());
 middle_app.use(express.urlencoded({ extended: true }));
 middle_app.use(cors(config.corsOption));
 
-middle_app.use('/api', api_routes);
+middle_app.use(express.static(path.join(__dirname, 'src/views')));
 middle_app.use('/views', view_routes);
+
+middle_app.use('/api', api_routes);
 middle_app.use('/report', report_routes)
 
 const PORT = config.port;
