@@ -16,14 +16,13 @@ export async function getUtilize(ncData, time) {
         order: [['startTime', 'DESC']],
     }).then((records) => {
         retData = 0;
-        for (let record of records) {  
-            // console.log('retData', retData);          
-            if(record.prod_status === 1)
-                // console.log(record);
+        for (let record of records) {     
+            if(record.valid_flag === 1)
+                // console.log(record.duration);
                 retData += record.duration;
         }
 
-        if(records[0] && records[0].prod_status === null) {     // 計算當前尚未結案的生產紀錄
+        if(records[0] && records[0].valid_flag === null) {     // 計算當前尚未結案的生產紀錄
             retData += (time.getTime() - records[0].startTime.getTime()) / 1000;
         }
         // console.log('retData', retData);  

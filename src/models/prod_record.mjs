@@ -22,7 +22,7 @@ Prod_Record.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        prod_status: {
+        valid_flag: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },

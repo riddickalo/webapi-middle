@@ -1,5 +1,6 @@
 import Alarm from "../models/alarm.mjs";
 
+// create an alarm record
 export async function createAlarm(currData, status) {
     // currData is FOCAS format
     try{
@@ -15,6 +16,7 @@ export async function createAlarm(currData, status) {
     };        
 };
 
+// close an alarm record if alarm off
 export async function closeAlarm(ncInfo) {
     try {
         await Alarm.findOne({

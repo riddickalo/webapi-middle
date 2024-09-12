@@ -16,7 +16,7 @@ export async function getReport(req, res) {
             if(report_type[1] === 'month') {
                 rawData = await Prod_Record.count({ 
                     where: {
-                        prod_status: 1,
+                        valid_flag: 1,
                         endTime: {
                             [Op.lt]: `${query.endTime.slice(0, 4)}-${query.endTime.slice(4, 6)}-${query.endTime.slice(6, 8)} \
                             ${query.endTime.slice(9, 11)}:${query.endTime.slice(11, 13)}:00`,
@@ -33,7 +33,7 @@ export async function getReport(req, res) {
             } else if(report_type[1] === 'day') {
                 rawData = await Prod_Record.findAll({ 
                     where: {
-                        prod_status: 1,
+                        valid_flag: 1,
                         endTime: {
                             [Op.lt]: `${query.endTime.slice(0, 4)}-${query.endTime.slice(4, 6)}-${query.endTime.slice(6, 8)} \
                             ${query.endTime.slice(9, 11)}:${query.endTime.slice(11, 13)}:00`,
@@ -50,7 +50,7 @@ export async function getReport(req, res) {
         } else if((report_type[0] === 'item')) {
             rawData = await Prod_Record.findAll({ 
                 where: {
-                    prod_status: 1,
+                    valid_flag: 1,
                     endTime: {
                         [Op.lt]: `${query.endTime.slice(0, 4)}-${query.endTime.slice(4, 6)}-${query.endTime.slice(6, 8)} \
                         ${query.endTime.slice(9, 11)}:${query.endTime.slice(11, 13)}:00`,

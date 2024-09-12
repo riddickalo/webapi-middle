@@ -38,8 +38,8 @@ Nc_Info.init(
             allowNull: true,
         },
         maintainStatus: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
         },
         utilize_rate: {     // 稼動率
             type: DataTypes.INTEGER,

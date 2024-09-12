@@ -34,7 +34,7 @@ export async function getDeviceEvents() {
                     if(!ifNew) {
                         // listen running flag
                         if(res.running_flag !== row.running) {
-                            await updateProd(res, row, rowStatus);
+                            await updateProd(rowStatus, row, res);
                             res.running_flag = row.running;
                         }
                         // listen alarm & emergency status
@@ -51,6 +51,8 @@ export async function getDeviceEvents() {
                         res.opStatus = rowStatus,
                         res.nc_ip = row.hostname;
                         res.save();
+                    } else if(ifNew && rowStatus === 'running') {
+                        await updateProd(rowStatus, row);
                     }
                 }).catch((err) => console.error(err));
             }
@@ -89,7 +91,7 @@ export async function updateUtilize() {
 //         }).then(async ([res, ifNew]) => {
 //             if(!ifNew) {
 //                 if(res.running_flag !== row.running) {
-//                     await updateProd(res, row, rowStatus);
+//                     await updateProd(rowStatus, row, res);
 //                     res.running_flag = row.running;
 //                 }
 //                 // listen alarm & emergency status
@@ -108,7 +110,7 @@ export async function updateUtilize() {
 //                 res.nc_ip = row.hostname;  
 //                 res.save();
 //             } else {
-//                 await updateProd(res, row, rowStatus, true);
+//                 await updateProd(rowStatus, row);
 //             }
 //         }).catch((err) => console.error(err));
 //     }

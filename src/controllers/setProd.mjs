@@ -2,60 +2,45 @@ import Prod_Record from "../models/prod_record.mjs";
 
 /* 
 根據狀態變化 修改Prod_Records的生產紀錄
-prevData: Prod_Record
+prevData: Nc_Info
 currData: FOCAS return format
 */
-export async function updateProd(prevData, currData, currStatus, test=false) {
-    if(test) {
-        retData = await Prod_Record.create({
-            nc_id: prevData.nc_id,
-            ncfile: prevData.ncfile,
-            region: prevData.region,
-            station: prevData.station,
-            prod_line: prevData.prod_line,
-            startTime: prevData.timestamp,
-        });
-        console.log('new product record')
-    } else{
-        try{
-            let retData = null;
-            if(prevData.running_flag === 3) {
-                await Prod_Record.findAll({
-                    where: { nc_id: prevData.nc_id, },
-                    order:[['startTime', 'DESC']],
-                    limit: 1,
-                }).then(async (records) => {
-                    for(let res of records) {
-                        if(currStatus === 'idle') {
-                            res.prod_status = 1;
-                        } else {
-                            res.prod_status = 0;
-                        }
-                        const resStart = new Date(res.startTime);
-                        const resEnd = new Date(currData.timestamp);
-                        res.endTime = currData.timestamp;
-                        res.duration = (resEnd.getTime() - resStart.getTime()) / 1000;
-                        retData = await res.save();
-                    }
-                });
-                console.log('resolve product record')
-
-            } else if(prevData.running_flag === 0 && currData.running === 3) {
-                retData = await Prod_Record.create({
-                    nc_id: currData.deviceName,
-                    ncfile: currData.exeProgName,
-                    region: currData.region,
-                    station: currData.station,
-                    prod_line: currData.prod_line,
-                    startTime: currData.timestamp,
-                });
-                console.log('new product record')
-            }
-
-            return Promise.resolve(retData);
-        } catch(err) {
-            return Promise.reject(err);
+export async function updateProd(currStatus, currData, prevData=null) {
+    try{
+        let retData = null;
+        if(prevData && prevData.running_flag === 3) {
+            console.log('update a product record');
+            await Prod_Record.findAll({
+                where: { nc_id: prevData.nc_id, },
+                order:[['startTime', 'DESC']],
+                limit: 1,
+            }).then(async ([record,]) => {
+                if(currStatus === 'idle') {
+                    record.valid_flag = 1;
+                } else {
+                    record.valid_flag = 0;
+                }
+                const recStart = new Date(record.startTime);
+                const recEnd = new Date(currData.timestamp);
+                console.log('time range: ', recStart, recEnd)
+                record.endTime = currData.timestamp;
+                record.duration = (recEnd.getTime() - recStart.getTime()) / 1000;
+                retData = await record.save();
+            });
+        } else if(!prevData || (prevData.running_flag === 0 && currData.running === 3)) {
+            console.log('create a product record');
+            retData = await Prod_Record.create({
+                nc_id: currData.deviceName,
+                ncfile: currData.exeProgName,
+                region: currData.region,
+                station: currData.station,
+                prod_line: currData.prod_line,
+                startTime: currData.timestamp,
+            });
         }
+            
+        return Promise.resolve(retData);
+    } catch(err) {
+        return Promise.reject(err);
     }
-
 }
