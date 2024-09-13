@@ -6,9 +6,8 @@ import view_routes from './routes/view.mjs';
 import report_routes from './routes/report.mjs'
 import cors from 'cors';
 import path from 'path';
-// import './bin/www.mjs';
-import './models/model_init.mjs';
-import './controllers/scheduler.mjs';
+import './bin/www.mjs';
+
 
 export const middle_app = express();
 

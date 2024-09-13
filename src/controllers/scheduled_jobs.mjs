@@ -6,6 +6,7 @@ import { getUtilize } from './utilize.mjs';
 import { getOpStatus } from '../utils/translateStatus.mjs';
 import { __dirname } from '../config/index.mjs';
 import { createAlarm, closeAlarm } from './setAlarm.mjs';
+import { sendLineDaily } from '../utils/lineNotify.mjs';
 
 export async function getDeviceEvents() {
     // let time = new Date();
@@ -72,6 +73,10 @@ export async function updateUtilize() {
                     });
             }
         }).catch(err => console.error(err));
+}
+
+export async function sendDailyMsg() {
+
 }
 
 /* Test GET data */

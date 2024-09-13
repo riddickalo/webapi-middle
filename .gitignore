@@ -10,3 +10,6 @@ device_events.json
 # dependency
 package-lock.json
 node_modules/
+
+# logs
+*.out

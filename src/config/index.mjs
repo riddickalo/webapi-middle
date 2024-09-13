@@ -23,6 +23,19 @@ export const orm_config = {
     password: process.env.DB_PASSWORD,
 }
 
+// 系統設定參數
+export let sys_config = {
+    sys_ln: 'en',
+    current_user: 'admin',
+    line_alarm_status: false,
+    line_alarm_token: '',
+    line_alarm_ln: '',
+    line_alarm_timezone: '',
+    line_daily_status: false,
+    line_daily_token: '',
+    line_daily_time: '',
+}
+
 // json2csv設定參數
 export const json2csv_config = {
     

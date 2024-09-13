@@ -28,25 +28,25 @@ Setting.init(
         },
         line_alarm_token: {
             type: DataTypes.STRING,
-            defaultValue: '37v9RzV9SWv7pHEYHEkzzYGwmoeDeLDdn3Hw1iOQaj3',
+            defaultValue: 'nluV4gisp5IzTojmVe9Ko7hgwEiQBh7jww0gGnrjVMe',
         },
         line_alarm_ln: {
             type: DataTypes.STRING,
-            defaultValue: 'en',
+            defaultValue: 'zh-TW',
         },
         line_alarm_timezone: {
             type: DataTypes.STRING,
             defaultValue: 'Taipei',
         },
-        line_date_status: {     // Line 日產量通知
+        line_daily_status: {     // Line 日產量通知
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
-        line_date_token: {
+        line_daily_token: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        line_date_time: {
+        line_daily_time: {
             type: DataTypes.STRING,
             defaultValue: '10:00',
         },
