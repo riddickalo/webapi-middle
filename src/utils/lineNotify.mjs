@@ -1,13 +1,19 @@
 import { sys_config } from "../config/index.mjs";
 
-export async function sendLineDaily(contents) {
+export async function sendLineDaily(contents, timestamp) {
     try{
         let msg = '\n';
-        if(sys_config.line_daily_ln==='en') {
 
-        } else {
-            
+        let total_amount = 0;
+        msg += '<戰情中控台 Line日產量通知>\n';
+        msg += `${timestamp.getMonth()+1}/${timestamp.getDate()} 產量簡報\n`;
+
+        for(let item of contents) {
+            msg += `機台: ${item.nc_id}, 即時稼動率: ${item.utilize_rate}%, 今日產量: ${item.prod_count}\n`;
+            total_amount += item.prod_count;
         }
+        msg += `日產量總計: ${total_amount}`;
+
         toLineNotify(msg, sys_config.line_daily_token);
     } catch(err) {
         console.error(err);

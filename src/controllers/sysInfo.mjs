@@ -9,7 +9,7 @@ export async function getVersion(req, res) {
 
 export async function getSettingParams(req, res) {
     await Setting.findOne({ where: { index: true } })
-        .then(([setting, ]) => res.status(200).send(setting))
+        .then(setting => res.status(200).send(setting))
         .catch(err => res.status(404).send(err));
 }
 

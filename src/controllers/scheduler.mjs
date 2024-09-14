@@ -1,6 +1,6 @@
 import * as scheduler from 'node-schedule';
 import { sys_config } from '../config/index.mjs';
-import { getDeviceEvents, updateUtilize, sendDailyMsg } from './scheduled_jobs.mjs';
+import { getDeviceEvents, updateUtilize, formDailyLineReport } from './scheduledJobs.mjs';
 
 console.info('Scheduler mounted');
 
@@ -38,9 +38,16 @@ if(process.env.DEV_ENV !== 'local'){
 }
 
 // 日產量通知
-export const Daily_notifyRule = new scheduler.RecurrenceRule();
-Daily_notifyRule.hour = [Number(sys_config.line_daily_time.slice(0,2)),];
-Daily_notifyRule.minute = [Number(sys_config.line_daily_time.slice(3,5)),];
+export const LineDaily_notifyRule = new scheduler.RecurrenceRule();
+LineDaily_notifyRule.hour = [Number(sys_config.line_daily_time.slice(0,2)),];
+LineDaily_notifyRule.minute = [Number(sys_config.line_daily_time.slice(3,5)),];
 
-export const Daily_notifyJob = scheduler.scheduleJob(Daily_notifyRule, 
-    () => sendDailyMsg());
+export const LineDaily_notifyJob = scheduler.scheduleJob(LineDaily_notifyRule, 
+    () => formDailyLineReport());
+
+// export const EmailDaily_notifyRule = new scheduler.RecurrenceRule();
+// EmailDaily_notifyRule.hour = [Number(sys_config.line_daily_time.slice(0,2)),];
+// EmailDaily_notifyRule.minute = [Number(sys_config.line_daily_time.slice(3,5)),];
+
+// export const EmailDaily_notifyJob = scheduler.scheduleJob(EmailDaily_notifyRule, 
+//     () => sendDailyMsg());

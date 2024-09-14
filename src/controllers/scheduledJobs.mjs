@@ -6,6 +6,7 @@ import { getUtilize } from './utilize.mjs';
 import { getOpStatus } from '../utils/translateStatus.mjs';
 import { __dirname } from '../config/index.mjs';
 import { createAlarm, closeAlarm } from './setAlarm.mjs';
+import { sys_config } from '../config/index.mjs';
 import { sendLineDaily } from '../utils/lineNotify.mjs';
 
 export async function getDeviceEvents() {
@@ -75,8 +76,16 @@ export async function updateUtilize() {
         }).catch(err => console.error(err));
 }
 
-export async function sendDailyMsg() {
+export async function formDailyLineReport() {
+    let currTime = new Date();
+    let startRange = new Date(currTime);
+    startRange.setDate(startRange.getDate() - 1);
+    let results = [];
 
+    
+    
+
+    sendLineDaily(results, currTime);
 }
 
 /* Test GET data */
