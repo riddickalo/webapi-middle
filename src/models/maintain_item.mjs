@@ -19,8 +19,8 @@ Maintain_Item.init(
             allowNull: false,
         },
         status: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true,
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
         }
 
     },

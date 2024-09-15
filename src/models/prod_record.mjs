@@ -22,6 +22,10 @@ Prod_Record.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
+        ncfile: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         valid_flag: {
             type: DataTypes.INTEGER,
             allowNull: true,

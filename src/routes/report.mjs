@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getReport } from "../controllers/report.mjs";
+import { getReport } from "../controllers/reports.mjs";
 
 const router = Router();
 

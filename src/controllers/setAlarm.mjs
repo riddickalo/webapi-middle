@@ -1,5 +1,5 @@
 import Alarm from "../models/alarm.mjs";
-import { alarmAssertHook } from "../utils/hooks.mjs";
+import { alarmDetectHook } from "../utils/hooks.mjs";
 
 // create an alarm record
 export async function createAlarm(currData, status) {
@@ -11,7 +11,7 @@ export async function createAlarm(currData, status) {
                             alarm_timestamp: currData.timestamp,
                         });
         // console.log(ret)
-        alarmAssertHook(ret);       // send message hook
+        alarmDetectHook(ret);       // send message hook
         return Promise.resolve(ret);
     } catch(err) {
         return Promise.reject(err);

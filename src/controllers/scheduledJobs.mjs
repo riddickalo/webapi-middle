@@ -1,6 +1,8 @@
 import fs from 'fs';
 import axios from 'axios';
 import Nc_Info from '../models/nc_info.mjs';
+import Prod_Record from '../models/prod_record.mjs';
+import { Op } from 'sequelize';
 import { updateProd } from './setProd.mjs';
 import { getUtilize } from './utilize.mjs';
 import { getOpStatus } from '../utils/translateStatus.mjs';
@@ -82,8 +84,29 @@ export async function formDailyLineReport() {
     startRange.setDate(startRange.getDate() - 1);
     let results = [];
 
+    let ncList = await Nc_Info.findAll({ 
+        order: [['nc_id', 'ASC']],
+        attributes: ['nc_id', 'utilize_rate'], 
+    });
+    let records = await Prod_Record.count({
+        where: { valid_flag: 1, endTime: { [Op.lt]: currTime, [Op.gte]: startRange }},
+        col: 'nc_id',
+        attributes: ['nc_id'],
+        group: ['nc_id'],
+    });
     
-    
+    ncList.map(row => {
+        const count = records.filter(record => {
+            if(record.nc_id === row.nc_id) return true;
+            else return false;
+        })[0];
+        const result = {
+            nc_id: row.nc_id,
+            utilize_rate: row.utilize_rate,
+            prod_count: (count)? count.count: 0,
+        }
+        results.push(result);
+    });
 
     sendLineDaily(results, currTime);
 }

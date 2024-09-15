@@ -9,11 +9,11 @@ export async function sendLineDaily(contents, timestamp) {
         msg += `${timestamp.getMonth()+1}/${timestamp.getDate()} 產量簡報\n`;
 
         for(let item of contents) {
-            msg += `機台: ${item.nc_id}, 即時稼動率: ${item.utilize_rate}%, 今日產量: ${item.prod_count}\n`;
+            msg += `機台: ${item.nc_id} 即時稼動率: ${item.utilize_rate}pct. 今日產量: ${item.prod_count}\n`;
             total_amount += item.prod_count;
         }
         msg += `日產量總計: ${total_amount}`;
-
+        
         toLineNotify(msg, sys_config.line_daily_token);
     } catch(err) {
         console.error(err);

@@ -19,6 +19,6 @@ export function settingUpdateHook(newSetting) {
     }
 }
 
-export function alarmAssertHook(alarmData) {
+export function alarmDetectHook(alarmData) {
     if(sys_config.line_alarm_status) sendLineAlarm(alarmData);
 }
