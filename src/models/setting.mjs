@@ -24,7 +24,7 @@ Setting.init(
         },
         line_alarm_status: {    // Line 即時警報通知
             type: DataTypes.BOOLEAN,
-            defaultValue: true,
+            defaultValue: false,
         },
         line_alarm_token: {
             type: DataTypes.STRING,
