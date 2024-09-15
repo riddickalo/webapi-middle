@@ -4,12 +4,12 @@ import axios from 'axios';
 import Nc_Info from '../models/nc_info.mjs';
 import Prod_Record from '../models/prod_record.mjs';
 import { Op } from 'sequelize';
+import { updateDeviceEvents } from './updateEvents.mjs';
 import { updateProd } from './setProd.mjs';
 import { getUtilize } from './utilize.mjs';
 import { getOpStatus } from '../utils/translateStatus.mjs';
 import { __dirname } from '../config/index.mjs';
 import { createAlarm, closeAlarm } from './setAlarm.mjs';
-import { sys_config } from '../config/index.mjs';
 import { sendLineDaily } from '../utils/lineNotify.mjs';
 
 export async function getDeviceEvents() {
@@ -36,45 +36,10 @@ export async function getDeviceEvents() {
             const axiosResp = await axios.get(process.env.FOCAS_URL, { params: {startTime: startTime} });
             eventData = axiosResp.data;
         }
-        
-        for(let row of eventData) {
-            const rowStatus = getOpStatus(row);
-            await Nc_Info.findOrCreate({
-                where: { nc_id: row.deviceName },
-                defaults: {
-                    ncfile: row.exeProgName,
-                    opStatus: rowStatus,
-                    nc_ip: row.hostname,
-                    running_flag: row.running,
-                }
-            }).then(async ([res, ifNew]) => {
-                if(!ifNew) {
-                    // listen running flag
-                    if(res.running_flag !== row.running) {
-                        await updateProd(rowStatus, row, res);
-                        res.running_flag = row.running;
-                    }
-                    // listen alarm & emergency status
-                    if((row.alarm === 1 && res.opStatus !== 'alarm') || 
-                        (row.emergency === 1 && res.opStatus !== 'warning')) {
-                            await createAlarm(row, rowStatus);
-                    }
-                    if((row.alarm === 0 && res.opStatus === 'alarm') || 
-                        (row.emergency === 0 && res.opStatus === 'warning')) {
-                            await closeAlarm(res);
-                    }
 
-                    res.ncfile = row.exeProgName,
-                    res.opStatus = rowStatus,
-                    res.nc_ip = row.hostname;
-                    res.save();
-                } else if(ifNew && rowStatus === 'running') {
-                    await updateProd(rowStatus, row);
-                }
-            });
-        }
-
+        await updateDeviceEvents(eventData);
         return Promise.resolve();
+        
     } catch(err) {
         console.error(err);
         return Promise.reject(err);
@@ -136,45 +101,3 @@ export async function formDailyLineReport() {
         return Promise.reject(err);
     }
 }
-
-/* Test GET data */
-// import testData from '../../device_events.json' assert {type: 'json'};
-// export async function getDeviceEvents() {
-//     const selected = testData.slice(0);
-//     for(let row of selected) {
-//         const rowStatus = getOpStatus(row);
-//         await Nc_Info.findOrCreate({
-//             where: { nc_id: row.deviceName },
-//             defaults: {
-//                 ncfile: row.exeProgName,
-//                 opStatus: rowStatus,
-//                 nc_ip: row.hostname,
-//                 running_flag: row.running,
-//             }
-//         }).then(async ([res, ifNew]) => {
-//             if(!ifNew) {
-//                 if(res.running_flag !== row.running) {
-//                     await updateProd(rowStatus, row, res);
-//                     res.running_flag = row.running;
-//                 }
-//                 // listen alarm & emergency status
-//                 if((row.alarm === 1 && res.opStatus !== 'alarm') || 
-//                     (row.emergency === 1 && res.opStatus !== 'warning')) {
-//                     console.log('creating an alarm');
-//                     await createAlarm(row, rowStatus);
-//                 }
-//                 if((row.alarm === 0 && res.opStatus === 'alarm') || 
-//                     (row.emergency === 0 && res.opStatus === 'warning')) {
-//                     console.log('closing an alarm');
-//                     await closeAlarm(res);
-//                 }
-//                 res.ncfile = row.exeProgName,
-//                 res.opStatus = rowStatus,
-//                 res.nc_ip = row.hostname;  
-//                 res.save();
-//             } else {
-//                 await updateProd(rowStatus, row);
-//             }
-//         }).catch((err) => console.error(err));
-//     }
-// }
