@@ -9,7 +9,7 @@ export async function updateProd(currStatus, currData, prevData=null) {
     try{
         let retData = null;
         if(prevData && prevData.running_flag === 3) {
-            console.log('update a product record');
+            // console.log('update a product record');
             await Prod_Record.findAll({
                 where: { nc_id: prevData.nc_id, },
                 order:[['startTime', 'DESC']],
@@ -22,13 +22,12 @@ export async function updateProd(currStatus, currData, prevData=null) {
                 }
                 const recStart = new Date(record.startTime);
                 const recEnd = new Date(currData.timestamp);
-                console.log('time range: ', recStart, recEnd)
                 record.endTime = currData.timestamp;
                 record.duration = (recEnd.getTime() - recStart.getTime()) / 1000;
                 retData = await record.save();
             });
         } else if(!prevData || (prevData.running_flag === 0 && currData.running === 3)) {
-            console.log('create a product record');
+            // console.log('create a product record');
             retData = await Prod_Record.create({
                 nc_id: currData.deviceName,
                 ncfile: currData.exeProgName,

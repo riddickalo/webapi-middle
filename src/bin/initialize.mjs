@@ -12,24 +12,25 @@ import { getDeviceEvents, updateUtilize } from "../controllers/scheduledJobs.mjs
     try{
         if(mode === 'initialize' || mode === 'test') {
             await orm_agent.sync({ force: true })
-                            .then(() => console.log('ORM model initialized'));
+                            .then(() => console.log('ORM model initialized...'));
 
             await Setting.findOrCreate({ where: { index: true } })
                             .then(([ret,]) => {
                                 settingUpdateHook(ret);
-                                console.log('Settings initialized');
+                                console.log('Settings initialized...');
                             });
 
-            await getDeviceEvents().then(() => console.log('Device events initialized'));
+            await getDeviceEvents().then(() => console.log('Device events initialized...'));
 
             if(mode === 'test')
-                await updateUtilize().then(() => console.log('Utilize rate updated'));
+                await updateUtilize().then(() => console.log('Utilize rate updated...'));
         } else {
             throw 'wrong env for initializing';
         }
-
+        console.log('All works done~');
         process.exit();
+        
     } catch(err) {
-        console.error(err);
+        throw err;
     }   
 })();

@@ -33,7 +33,7 @@ export async function sendLineAlarm(content) {
             msg += `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} \n`;
             msg += `因 ${content.alarm_msg} \n發生警報，請盡快派工處理！`;
         }
-        console.log(msg)
+        // console.log(msg)
         toLineNotify(msg, sys_config.line_alarm_token);
     } catch(err) {
         console.error(err);
@@ -48,6 +48,5 @@ function toLineNotify(msg, token) {
         "Authorization": "Bearer " + token,
         "Content-Type": "application/x-www-form-urlencoded",
     }        
-    fetch(lineNotifyUrl, { method: "POST", headers: header, body: `message=${msg}` })
-        .then(resp => console.log(resp)).catch(err => console.error(err));
+    fetch(lineNotifyUrl, { method: "POST", headers: header, body: `message=${msg}` });
 }
