@@ -21,7 +21,7 @@ export const orm_config = {
     database: process.env.DB_DATABASE,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    logging: process.env.DB_LOGGING || true,
+    logging: process.env.DB_VERBOSE || true,
 }
 
 // 系統設定參數
