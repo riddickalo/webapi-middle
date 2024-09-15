@@ -1,0 +1,12 @@
+RUN_ENV='local'             # 'local' no scheduler, 'test' get device-events from .json, 'initialize' means sync all events from FOCAS, null means normal
+PORT=5001
+FOCAS_SYNC_MODE='active'    # data retriving mode, 'passive' means webhook
+FOCAS_URL='http://127.0.0.1:8083/api/device-events'
+FOCAS_SYNC_PERIOD=60
+UTILIZE_POLL_INTERVAL=1     # mins
+UTILIZE_DATE_RANGE=10       # days
+DB_HOST='localhost'
+DB_PORT=5432
+DB_DATABASE='webapi'
+DB_USERNAME='agent'
+DB_PASSWORD='1'

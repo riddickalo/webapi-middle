@@ -20,8 +20,9 @@
   "version": "v0.0.1",
   "main": "app.mjs",
   "scripts": {
+    "initialize-server": "node -r dotenv/config ./src/bin/initialize.mjs dotenv_config_path=.env.dev",
     "dev-start": "nodemon -r dotenv/config ./src/app.mjs dotenv_config_path=.env.dev",
-    "start": "node -r dotenv/config ./src/app.mjs dotenv_config_path=.env",
+    "start": "node -r dotenv/config ./src/app.mjs dotenv_config_path=.env && exit 1",
     "clone-pages-win": "cd src/ && rd /s /q views && git clone -b gh-pages https://github.com/riddickalo/webapi-react.git views",
     "clone-pages": "mkdir -p src/views && rm -rf src/views/ && git clone -b gh-pages https://github.com/riddickalo/webapi-react.git src/views",
     "get-views": "mkdir -p src/views && cp -rfv ../webapi-react/build/* ./src/views/"

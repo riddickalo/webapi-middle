@@ -9,9 +9,9 @@ import { settingUpdateHook } from "../utils/hooks.mjs";
 
 import '../controllers/scheduler.mjs';
 
-(async() =>{
+(async() => {
     try{
-        await orm_agent.sync({ alter: true, force: false })
+        await orm_agent.sync({ alter: true })
                         .then(() => console.info('ORM model sync'));
 
         await Setting.findOrCreate({ where: { index: true } })

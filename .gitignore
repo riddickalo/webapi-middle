@@ -6,6 +6,7 @@ device_events.json
 # env
 .env.dev
 .env.test
+.env
 
 # dependency
 package-lock.json

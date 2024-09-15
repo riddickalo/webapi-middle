@@ -15,7 +15,7 @@ Focas_syncRule.second = (() => {
     return rule; 
 })();
 
-if(process.env.DEV_ENV !== 'local'){
+if(process.env.RUN_ENV !== 'local'){
     const Focas_syncJob = scheduler.scheduleJob(Focas_syncRule, 
         () => getDeviceEvents());
 }
@@ -32,7 +32,7 @@ Utilize_updateRule.minute = (() => {
     return rule; 
 })();
 
-if(process.env.DEV_ENV !== 'local'){
+if(process.env.RUN_ENV !== 'local'){
     const Utilize_updateJob = scheduler.scheduleJob(Utilize_updateRule, 
         () => updateUtilize());
 }
