@@ -30,8 +30,10 @@ export async function closeAlarm(ncInfo) {
             order: [['alarm_timestamp', 'DESC']],
         }).then(async (ret) => {
             // console.log(ret)
-            ret.history_flag = true;
-            ret.save();
+            if(ret) {
+                ret.history_flag = true;
+                ret.save();
+            }
         }).then((res) => Promise.resolve(res));
     } catch(err) {
         return Promise.reject(err);
