@@ -7,19 +7,28 @@ export default class Maintain_Record extends Model {};
 
 Maintain_Record.init(
     {
-        item_sn: {
+        sn: {
             type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true,
         },
         nc_id: {
             type: DataTypes.STRING,
-            primaryKey: true,
+            allowNull: false,
         },
         status: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
         },
-        last_check: {
+        worker: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        scheduled_check_time: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        actual_check_time: {
             type: DataTypes.DATE,
             allowNull: true,
         }
@@ -30,12 +39,6 @@ Maintain_Record.init(
         timestamps: true,
     }
 )
-
-Maintain_Record.belongsTo(Maintain_Item, {
-    foreignKey: 'item_sn',
-    targetKey: 'sn',
-    onDelete: 'CASCADE',
-})
 
 Maintain_Record.belongsTo(Nc_Info, {
     foreignKey: 'nc_id',

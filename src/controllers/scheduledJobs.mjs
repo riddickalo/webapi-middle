@@ -5,11 +5,8 @@ import Nc_Info from '../models/nc_info.mjs';
 import Prod_Record from '../models/prod_record.mjs';
 import { Op } from 'sequelize';
 import { updateDeviceEvents } from './updateEvents.mjs';
-import { updateProd } from './setProd.mjs';
 import { getUtilize } from './utilize.mjs';
-import { getOpStatus } from '../utils/translateStatus.mjs';
 import { __dirname } from '../config/index.mjs';
-import { createAlarm, closeAlarm } from './setAlarm.mjs';
 import { sendLineDaily } from '../utils/lineNotify.mjs';
 
 export async function getDeviceEvents() {
