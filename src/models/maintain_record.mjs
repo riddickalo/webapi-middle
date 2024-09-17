@@ -12,6 +12,10 @@ Maintain_Record.init(
             autoIncrement: true,
             primaryKey: true,
         },
+        item: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         nc_id: {
             type: DataTypes.STRING,
             allowNull: false,

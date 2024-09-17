@@ -23,6 +23,10 @@ Maintain_Item.init(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        enable: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
         status: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
@@ -36,6 +40,7 @@ Maintain_Item.init(
     {
         sequelize: orm_agent,
         modelName: 'Maintain_Item',
+        timestamps: true,
     }
 )
 

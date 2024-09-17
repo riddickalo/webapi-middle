@@ -4,6 +4,8 @@ import Alarm from '../models/alarm.mjs';
 import Nc_Info from "../models/nc_info.mjs";
 import Prod_Record from '../models/prod_record.mjs';
 import Setting from "../models/setting.mjs";
+import Maintain_Item from "../models/maintain_item.mjs";
+import Maintain_Record from "../models/maintain_record.mjs";
 import { sys_config } from "../config/index.mjs";
 import { settingUpdateHook } from "../utils/hooks.mjs";
 

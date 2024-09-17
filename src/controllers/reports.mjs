@@ -5,15 +5,7 @@ import Setting from "../models/setting.mjs";
 import Nc_Info from "../models/nc_info.mjs";
 import Prod_Record from "../models/prod_record.mjs";
 import archiver from 'archiver';
-
-const convertTimeFormat = (time, type) => {
-    let timeStr = `${time.getFullYear()}/${time.getMonth()+1}`;
-    if(type === 'day')
-        timeStr += `/${time.getDate()}`;
-    else if(type === 'hour')
-        timeStr += ` ${time.getHours()}:${time.getMinutes()}`;
-    return timeStr;
-}
+import { convertTimeFormat } from "../utils/timeFormat.mjs";
 
 // resolve report requests
 export async function getReport(req, res) {
