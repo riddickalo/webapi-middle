@@ -28,7 +28,7 @@ Setting.init(
         },
         line_alarm_token: {
             type: DataTypes.STRING,
-            defaultValue: 'nluV4gisp5IzTojmVe9Ko7hgwEiQBh7jww0gGnrjVMe',
+            defaultValue: 'aQsxXbiE10zX9RtgJdmkhnbG0hrwRZv4VfMv6cX247y',
         },
         line_alarm_ln: {
             type: DataTypes.STRING,

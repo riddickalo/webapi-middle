@@ -5,7 +5,7 @@ export async function sendLineDaily(contents, timestamp) {
         let msg = '\n';
 
         let total_amount = 0;
-        msg += '<戰情中控台 Line日產量通知>\n';
+        msg += '<Line日產量通知>\n';
         msg += `${timestamp.getMonth()+1}/${timestamp.getDate()} 產量簡報\n`;
 
         for(let item of contents) {
@@ -27,7 +27,7 @@ export async function sendLineAlarm(content) {
         if(sys_config.line_alarm_ln === 'en') {    // english message
 
         } else {                            // zh-TW message
-            msg += '<戰情中控台 Line即時警報通知>\n';
+            msg += '<Line即時警報通知>\n';
             msg += `機台名稱： ${content.nc_id} \n`;
             msg += `於 ${time.getFullYear()}-${time.getMonth()+1}-${time.getDate()} `;
             msg += `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} \n`;
