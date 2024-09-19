@@ -31,7 +31,8 @@ export async function sendLineAlarm(content) {
             msg += `機台名稱： ${content.nc_id} \n`;
             msg += `於 ${time.getFullYear()}-${time.getMonth()+1}-${time.getDate()} `;
             msg += `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} \n`;
-            msg += `因 ${content.alarm_msg} \n發生警報，請盡快派工處理！`;
+            if(content.alarm_msg !== null) msg += `因 ${content.alarm_msg} \n`;
+            msg += `發生警報，請盡快派工處理！`;
         }
         // console.log(msg)
         toLineNotify(msg, sys_config.line_alarm_token);
@@ -49,4 +50,7 @@ function toLineNotify(msg, token) {
         "Content-Type": "application/x-www-form-urlencoded",
     }        
     fetch(lineNotifyUrl, { method: "POST", headers: header, body: `message=${msg}` });
+
+    // fetch(lineNotifyUrl, { method: "POST", headers: header, body: `message=${msg}` })
+    //     .then(resp => console.log(resp)).catch(err => console.error(err));
 }

@@ -7,7 +7,7 @@ export const config = {
     port: process.env.PORT || 5000,
     corsOption: {
         origin: '*',
-        methods: 'GET, POST',
+        methods: '*',
         preflightContinue: false,
         allowedHeaders: '*'
     },
@@ -38,6 +38,11 @@ export let sys_config = {
     line_daily_status: false,
     line_daily_token: '',
     line_daily_time: '',
+}
+
+// 保養項目相關參數
+export let maintain_config = {
+    polling_maintain_time: '8:00',
 }
 
 // json2csv設定參數

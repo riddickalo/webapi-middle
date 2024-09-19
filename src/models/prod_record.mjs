@@ -1,6 +1,5 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 import orm_agent from "./orm_agent.mjs";
-import Nc_Info from "./nc_info.mjs";
 
 export default class Prod_Record extends Model {}
 
@@ -50,9 +49,3 @@ Prod_Record.init(
         updatedAt: false,
     },
 );
-
-Prod_Record.belongsTo(Nc_Info, {
-    foreignKey: 'nc_id',
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-});

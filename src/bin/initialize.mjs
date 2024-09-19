@@ -3,6 +3,7 @@ import Alarm from '../models/alarm.mjs';
 import Nc_Info from "../models/nc_info.mjs";
 import Prod_Record from '../models/prod_record.mjs';
 import Setting from "../models/setting.mjs";
+import '../models/associations.mjs';
 import { settingUpdateHook } from "../utils/hooks.mjs";
 import { getDeviceEvents, updateUtilize } from "../controllers/scheduledJobs.mjs";
 

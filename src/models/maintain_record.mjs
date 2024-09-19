@@ -1,7 +1,5 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 import orm_agent from "./orm_agent.mjs";
-import Maintain_Item from "./maintain_item.mjs";
-import Nc_Info from "./nc_info.mjs";
 
 export default class Maintain_Record extends Model {};
 
@@ -44,7 +42,3 @@ Maintain_Record.init(
     }
 )
 
-Maintain_Record.belongsTo(Nc_Info, {
-    foreignKey: 'nc_id',
-    onDelete: 'CASCADE',
-})

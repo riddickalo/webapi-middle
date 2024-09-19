@@ -19,6 +19,7 @@ export async function getReport(req, res) {
         if(query.type[0] === 'nc') {
             const reports = await formNcReport(query);
             const filename = `${req.query.type[0]}_${req.query.endTime}.zip`;
+            // console.log(reports)
 
             const zipper = archiver('zip', { zlib: { level: 9 }});         
             zipper.on('warning', (err) => {
@@ -152,6 +153,7 @@ async function formNcReport(query) {
                         ncfile: row.ncfile,
                         startTime: convertTimeFormat(row.startTime, query.type[1]),
                         endTime: convertTimeFormat(row.endTime, query.type[1]),
+                        duration: row.duration,
                     });
                 });
                 retData.push({ nc_id: nc.nc_id, data: subRecords, file: json2csv(subRecords) });
