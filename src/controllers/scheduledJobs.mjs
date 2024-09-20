@@ -107,7 +107,7 @@ export async function formDailyLineReport() {
 // 檢查保養項目時效
 export async function checkMaintainItems() {
     // set condition range
-    const today = new Date('2024-9-23');
+    const today = new Date();
     const range = new Date(today);
     range.setDate(today.getDate() + 1);
     console.log(today);
