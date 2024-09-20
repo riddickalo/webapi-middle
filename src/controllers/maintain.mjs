@@ -96,7 +96,7 @@ async function updateMaintainItem(query) {
 async function createMaintainRecord(query) {
     try{   
         // create a Maintain_Record
-        if(query.enable) {
+        if(query.status > 0) {
             await Maintain_Record.create({
                 item: query.item,
                 nc_id: query.nc_id,
@@ -108,7 +108,14 @@ async function createMaintainRecord(query) {
                 await Maintain_Item.findByPk(Number(query.sn))
                     .then(async item => {
                         item.last_check_time = newRecord.actual_check_time;
-                        item.status = 1;
+                        if(query.enable) {
+                            const newScheduleTime = new Date();
+                            newScheduleTime.setDate(newScheduleTime.getDate() + Number(query.period));
+                            item.scheduled_check_time = newScheduleTime;
+                            item.status = 1;
+                        } else {
+                            item.status = 0;
+                        }
                         await item.save();
                     });
             });

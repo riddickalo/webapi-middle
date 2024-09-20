@@ -15,6 +15,11 @@ import '../controllers/scheduler.mjs';
 (async() => {
     try{
         await orm_agent.sync({ alter: true }).then(() => console.info('ORM model sync'));
+        await Setting.findOrCreate({ where: { index: true } })
+                            .then(([ret,]) => {
+                                settingUpdateHook(ret);
+                                console.log('Settings initialized...');
+                            });
         
     } catch(err) {
         console.error(err);

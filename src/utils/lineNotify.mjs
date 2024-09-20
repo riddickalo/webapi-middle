@@ -14,7 +14,7 @@ export async function sendLineDaily(contents, timestamp) {
         }
         msg += `日產量總計: ${total_amount}`;
         
-        toLineNotify(msg, sys_config.line_daily_token);
+        await toLineNotify(msg, sys_config.line_daily_token);
     } catch(err) {
         console.error(err);
     }
@@ -35,13 +35,33 @@ export async function sendLineAlarm(content) {
             msg += `發生警報，請盡快派工處理！`;
         }
         // console.log(msg)
-        toLineNotify(msg, sys_config.line_alarm_token);
+        await toLineNotify(msg, sys_config.line_alarm_token);
     } catch(err) {
         console.error(err);
     }
 }
 
-function toLineNotify(msg, token) {
+export async function testLineFunction() {
+    try{
+        let testAlarmMsg = '';
+        let testDailyMsg = '';
+        if(sys_config.line_alarm_ln === 'en') {
+
+        } else {
+            testAlarmMsg += '\nLine即時警報通知測試訊息';
+            testDailyMsg += '\nLine日產量通知測試訊息';
+        }
+        await toLineNotify(testAlarmMsg, sys_config.line_alarm_token);   // test alarm notify
+        await toLineNotify(testDailyMsg, sys_config.line_daily_token);   // test daily notify
+        return Promise.resolve();
+
+    } catch(err) {
+        console.error(err);
+        return Promise.reject(err);
+    }
+}
+
+async function toLineNotify(msg, token) {
     const lineNotifyUrl = 'https://notify-api.line.me/api/notify';
     
     // using Bearer auth
@@ -49,8 +69,8 @@ function toLineNotify(msg, token) {
         "Authorization": "Bearer " + token,
         "Content-Type": "application/x-www-form-urlencoded",
     }        
-    fetch(lineNotifyUrl, { method: "POST", headers: header, body: `message=${msg}` });
 
-    // fetch(lineNotifyUrl, { method: "POST", headers: header, body: `message=${msg}` })
-    //     .then(resp => console.log(resp)).catch(err => console.error(err));
+    const resp = await fetch(lineNotifyUrl, { method: "POST", headers: header, body: `message=${msg}` });
+    if(resp.status < 300) return Promise.resolve(resp.status);
+    else return Promise.reject([resp.status, msg]);
 }

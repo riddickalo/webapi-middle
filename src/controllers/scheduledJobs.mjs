@@ -3,12 +3,15 @@ import path from 'path';
 import axios from 'axios';
 import Nc_Info from '../models/nc_info.mjs';
 import Prod_Record from '../models/prod_record.mjs';
+import Maintain_Item from '../models/maintain_item.mjs';
 import { Op } from 'sequelize';
 import { updateDeviceEvents } from './updateEvents.mjs';
 import { getUtilize } from './utilize.mjs';
 import { __dirname } from '../config/index.mjs';
 import { sendLineDaily } from '../utils/lineNotify.mjs';
+import { updateNcMaintainStatus } from './maintain.mjs';
 
+// FOCAS同步資料
 export async function getDeviceEvents() {
     // let time = new Date();
     const queryStartTime = ((time) => {
@@ -43,6 +46,7 @@ export async function getDeviceEvents() {
     }
 }
 
+// 更新稼動率
 export async function updateUtilize() {
     try {
         const nc_list = await Nc_Info.findAll();
@@ -61,6 +65,7 @@ export async function updateUtilize() {
     }
 }
 
+// 生成日產量通知
 export async function formDailyLineReport() {
     try{
         let currTime = new Date();
@@ -96,5 +101,40 @@ export async function formDailyLineReport() {
         return Promise.resolve();
     } catch(err) {
         return Promise.reject(err);
+    }
+}
+
+// 檢查保養項目時效
+export async function checkMaintainItems() {
+    // set condition range
+    const today = new Date('2024-9-23');
+    const range = new Date(today);
+    range.setDate(today.getDate() + 1);
+    console.log(today);
+
+    try{
+        // step 1, find all nc
+        await Nc_Info.findAll({ attributes: ['nc_id', 'maintainStatus'] }).then(async ncList => {
+            for(let nc of ncList) {
+                // step 2, find all items per nc
+                await Maintain_Item.findAll({ where: { nc_id: nc.nc_id, enable: true } })
+                    .then(async items => {
+                        // step 3, check scheduled time 
+                        items.forEach(async item => {
+                            console.log(item)
+                            // step 4, set status if exceeded
+                            if(item.scheduled_check_time < today) item.status = 3;
+                            else if(item.scheduled_check_time < range && item.scheduled_check_time >= today) item.status = 2;
+                            // step 5, record the highest level maintain status
+                            if(item.status > nc.maintainStatus) nc.maintainStatus = item.status;
+                            await item.save();
+                        });
+                    })
+                // step 6, update nc info
+                await nc.save();
+            }
+        })
+    } catch(err) {
+        console.error(err);
     }
 }

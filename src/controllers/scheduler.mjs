@@ -1,6 +1,6 @@
 import * as scheduler from 'node-schedule';
-import { sys_config } from '../config/index.mjs';
-import { getDeviceEvents, updateUtilize, formDailyLineReport } from './scheduledJobs.mjs';
+import { sys_config, maintain_config } from '../config/index.mjs';
+import { getDeviceEvents, updateUtilize, formDailyLineReport, checkMaintainItems } from './scheduledJobs.mjs';
 
 console.info('Scheduler mounted');
 
@@ -55,3 +55,14 @@ export const LineDaily_notifyJob = scheduler.scheduleJob(LineDaily_notifyRule,
 
 // export const EmailDaily_notifyJob = scheduler.scheduleJob(EmailDaily_notifyRule, 
 //     () => sendDailyMsg());
+
+// 輪詢保養項目 檢查時效
+export const MaintainItem_pollingRule = new scheduler.RecurrenceRule();
+const pollingTime = maintain_config.polling_maintain_time.split(':');
+MaintainItem_pollingRule.hour = [Number(pollingTime[0])];
+MaintainItem_pollingRule.minute = [Number(pollingTime[1])];
+MaintainItem_pollingRule.second = [7];
+
+export const MaintainItem_pollingJob = scheduler.scheduleJob(MaintainItem_pollingRule, 
+    () => checkMaintainItems());
+
