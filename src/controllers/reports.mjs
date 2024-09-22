@@ -1,5 +1,6 @@
 import { json2csv } from "json-2-csv";
 import { json2csv_config } from "../config/index.mjs";
+import xlsx, { IJsonSheet, ISettings } from "json-as-xlsx";
 import { Op } from "sequelize";
 import Setting from "../models/setting.mjs";
 import Nc_Info from "../models/nc_info.mjs";

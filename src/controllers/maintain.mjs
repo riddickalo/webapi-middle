@@ -4,7 +4,7 @@ import Maintain_Record from "../models/maintain_record.mjs";
 import { convertTimeFormat } from "../utils/timeFormat.mjs";
 
 export async function getMaintainData(req, res) {
-    console.log('maintain data request ', req.params);
+    // console.log('maintain data request ', req.params);
     await retrieveMaintainData(req.params.ncId)
         .then(ret => {
             res.status(200).send(ret);
@@ -17,9 +17,9 @@ export async function getMaintainData(req, res) {
 }
 
 export async function updateMaintainData(req, res) {
-    console.log('update behavior: ', req.params.behavior);
+    // console.log('update behavior: ', req.params.behavior);
     const query = req.body;
-    console.log(query)
+    // console.log(query)
 
     try{
         if(req.params.behavior === 'update-item') {
