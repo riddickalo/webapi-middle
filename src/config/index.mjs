@@ -45,7 +45,11 @@ export let maintain_config = {
     polling_maintain_time: '8:00',
 }
 
-// json2csv設定參數
-export const json2csv_config = {
-    
+// json-as-xlsx設定參數
+export const jsonAsXlsx_config = {
+    extraLength: 3,
+    writeOptions: {
+        type: 'buffer',
+        bookType: 'xlsx',
+    },
 }

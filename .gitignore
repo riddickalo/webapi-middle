@@ -2,6 +2,7 @@
 server/
 src/views/
 device_events.json
+*.xlsx
 
 # env
 .env.dev

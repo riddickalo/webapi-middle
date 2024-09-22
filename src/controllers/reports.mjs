@@ -1,11 +1,9 @@
 import { json2csv } from "json-2-csv";
-import { json2csv_config } from "../config/index.mjs";
-import xlsx, { IJsonSheet, ISettings } from "json-as-xlsx";
+import { jsonAsXlsx_config } from "../config/index.mjs";
+import xlsx from "json-as-xlsx";
 import { Op } from "sequelize";
-import Setting from "../models/setting.mjs";
 import Nc_Info from "../models/nc_info.mjs";
 import Prod_Record from "../models/prod_record.mjs";
-import archiver from 'archiver';
 import { convertTimeFormat } from "../utils/timeFormat.mjs";
 
 // resolve report requests
@@ -18,24 +16,15 @@ export async function getReport(req, res) {
 
     try{
         if(query.type[0] === 'nc') {
-            const reports = await formNcReport(query);
-            const filename = `${req.query.type[0]}_${req.query.endTime}.zip`;
+            const [reports, _] = await formNcReport(query);
             // console.log(reports)
 
-            const zipper = archiver('zip', { zlib: { level: 9 }});         
-            zipper.on('warning', (err) => {
-                if(err.code === 'ENONET') console.log(err);
-                else throw err;
-            });
             // response
-            // res.header('Content-Type: application/zip;');
-            // res.header(`Content-Disposition: attachment; filename=${filename}`);
-            res.attachment(filename);
-            zipper.pipe(res);       // zip file stream destination
-            reports.map(row => {    // append files into zip
-                zipper.append(row.file, { name: `${row.nc_id}_${query.type[1]}.csv` })
+            res.writeHead(200, {
+                'Content-Type': 'application/octet-stream;',
+                // 'Content-disposition': `attachment; filename=${filename}`,
             });
-            zipper.finalize();      // finish and send file
+            res.end(xlsx(reports, jsonAsXlsx_config));
 
         } else if(query.type[0] === 'item') {
             let retData = await formItemReport(report_type[1]);
@@ -56,7 +45,8 @@ export async function getReport(req, res) {
 async function formNcReport(query) {
     try {
         let retData = [];
-        let subRecords = [];
+        let content = [];
+        const filename = `${query.type[0]}_${query.endTime}.xlsx`;
         const rangeEnd = new Date([`${query.endTime[0]}-${query.endTime[1]}-${query.endTime[2]}`, `${query.endTime[3]}:${query.endTime[4]}:00`]);
         const rangeStart = new Date([`${query.startTime[0]}-${query.startTime[1]}-${query.startTime[2]}`, `${query.startTime[3]}:${query.startTime[4]}:00`]);
         // get all nc, traversal them
@@ -88,7 +78,7 @@ async function formNcReport(query) {
                         group: ['ncfile'],
                     });
                     rawData.forEach(row => {
-                        subRecords.push({
+                        content.push({
                             region: nc.region,
                             prod_line: nc.prod_line,
                             station: nc.station,
@@ -99,7 +89,16 @@ async function formNcReport(query) {
                     });
                     rangeStart.setTime(monthRunner.getTime());
                 }
-                retData.push({ nc_id: nc.nc_id, data: subRecords, file: json2csv(subRecords) });
+                // set excel columns
+                const monthColumns = [
+                    { label: 'Factory Region', value: 'region' },
+                    { label: 'Production Line', value: 'prod_line' },
+                    { label: 'Work Station', value: 'station' },
+                    { label: 'NC File', value: 'ncfile' },
+                    { label: 'Timestamp', value: 'time_tag' },
+                    { label: 'Count', value: 'count' },
+                ];
+                retData.push({ sheet: nc.nc_id, columns: monthColumns, content: content });
 
             } else if(query.type[1] === 'day') {    // request for day report
                 while(rangeStart < rangeEnd) {
@@ -120,7 +119,7 @@ async function formNcReport(query) {
                         group: ['ncfile'],
                     });
                     rawData.forEach(row => {
-                        subRecords.push({
+                        content.push({
                             region: nc.region,
                             prod_line: nc.prod_line,
                             station: nc.station,
@@ -131,7 +130,16 @@ async function formNcReport(query) {
                     });
                     rangeStart.setTime(dateRunner.getTime());
                 }
-                retData.push({ nc_id: nc.nc_id, data: subRecords, file: json2csv(subRecords) });
+                // set excel columns
+                const dayColumns = [
+                    { label: 'Factory Region', value: 'region' },
+                    { label: 'Production Line', value: 'prod_line' },
+                    { label: 'Work Station', value: 'station' },
+                    { label: 'NC File', value: 'ncfile' },
+                    { label: 'Timestamp', value: 'time_tag' },
+                    { label: 'Count', value: 'count' },
+                ];
+                retData.push({ sheet: nc.nc_id, columns: dayColumns, content: content });
 
             } else {        // request for detail report
                 // get all product records
@@ -147,7 +155,7 @@ async function formNcReport(query) {
                     order: [['ncfile', 'ASC'], ['endTime', 'ASC']],            
                 });
                 rawData.forEach(row => {
-                    subRecords.push({
+                    content.push({
                         region: nc.region,
                         prod_line: nc.prod_line,
                         station: nc.station,
@@ -157,13 +165,24 @@ async function formNcReport(query) {
                         duration: row.duration,
                     });
                 });
-                retData.push({ nc_id: nc.nc_id, data: subRecords, file: json2csv(subRecords) });
+                // set excel columns
+                const hourColumns = [
+                    { label: 'Factory Region', value: 'region' },
+                    { label: 'Production Line', value: 'prod_line' },
+                    { label: 'Work Station', value: 'station' },
+                    { label: 'NC File', value: 'ncfile' },
+                    { label: 'Process Start Time', value: 'startTime' },
+                    { label: 'Process End Time', value: 'endTime' },
+                    { label: 'Process Duration (sec)', value: 'duration' },
+                ];
+                retData.push({ sheet: nc.nc_id, columns: hourColumns, content: content });
             }
         }
         // console.log(retData[0]);
-        return retData;
+        return Promise.resolve([retData, filename]);
     } catch(err) {
         console.error(err);
+        return Promise.reject();
     }
 }
 
@@ -190,3 +209,30 @@ async function formItemReport(query) {
         console.error(err);
     }
 }
+
+/* json to sheet template
+const data: IJsonSheet[] = [
+    {
+      sheet: "Adults",
+      columns: [
+        { label: "Name", value: "name" },
+        { label: "Age", value: "age", format: '# "years"' },
+      ],
+      content: [
+        { name: "Monserrat", age: 21, more: { phone: "11111111" } },
+        { name: "Luis", age: 22, more: { phone: "12345678" } },
+      ],
+    },
+    {
+      sheet: "Pets",
+      columns: [
+        { label: "Name", value: "name" },
+        { label: "Age", value: "age" },
+      ],
+      content: [
+        { name: "Malteada", age: 4, more: { phone: "99999999" } },
+        { name: "Picadillo", age: 1, more: { phone: "87654321" } },
+      ],
+    },
+  ]
+*/
