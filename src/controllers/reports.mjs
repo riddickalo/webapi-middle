@@ -45,13 +45,13 @@ export async function getReport(req, res) {
 async function formNcReport(query) {
     try {
         let retData = [];
-        let content = [];
         const filename = `${query.type[0]}_${query.endTime}.xlsx`;
-        const rangeEnd = new Date([`${query.endTime[0]}-${query.endTime[1]}-${query.endTime[2]}`, `${query.endTime[3]}:${query.endTime[4]}:00`]);
-        const rangeStart = new Date([`${query.startTime[0]}-${query.startTime[1]}-${query.startTime[2]}`, `${query.startTime[3]}:${query.startTime[4]}:00`]);
         // get all nc, traversal them
-        const ncList = await Nc_Info.findAll({ order: [['nc_id', 'ASC']], attributes: ['nc_id'] });
+        const ncList = await Nc_Info.findAll({ order: [['nc_id', 'ASC']], attributes: ['nc_id', 'region', 'prod_line', 'station'] });
         for(let nc of ncList) {
+            const rangeEnd = new Date([`${query.endTime[0]}-${query.endTime[1]}-${query.endTime[2]}`, `${query.endTime[3]}:${query.endTime[4]}:00`]);
+            const rangeStart = new Date([`${query.startTime[0]}-${query.startTime[1]}-${query.startTime[2]}`, `${query.startTime[3]}:${query.startTime[4]}:00`]);
+            let content = [];
             if(query.type[1] === 'month') {     // request for month report
                 while(rangeStart < rangeEnd) {
                     const monthRunner = new Date(rangeStart);

@@ -5,6 +5,7 @@ export async function getUtilize(ncData, time) {
     // const time = new Date();
     let retData = null;
     const periodStart = new Date(time.getTime());
+    // calculate selected records range
     periodStart.setDate(periodStart.getDate() - process.env.UTILIZE_DATE_RANGE);
     await Prod_Record.findAll({
         where: {

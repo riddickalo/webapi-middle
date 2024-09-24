@@ -25,6 +25,12 @@ export async function sendLineAlarm(content) {
         let msg = '\n';
         const time = new Date(content.alarm_timestamp);
         if(sys_config.line_alarm_ln === 'en') {    // english message
+            msg += '<Line Alarm Notify>\n';
+            msg += `Machine ID： ${content.nc_id} \n`;
+            msg += `Alarm emerged at ${time.getFullYear()}-${time.getMonth()+1}-${time.getDate()} `;
+            msg += `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} \n`;
+            if(content.alarm_msg !== null) msg += `possibly caused by ${content.alarm_msg} \n`;
+            msg += `please handle it immediately！`;
 
         } else {                            // zh-TW message
             msg += '<Line即時警報通知>\n';
@@ -48,8 +54,8 @@ export async function testLineFunction() {
         if(sys_config.line_alarm_ln === 'en') {
 
         } else {
-            testAlarmMsg += '\nLine即時警報通知測試訊息';
-            testDailyMsg += '\nLine日產量通知測試訊息';
+            testAlarmMsg += '\n<Line Alarm Notify test message>';
+            testDailyMsg += '\n<Line Daily Report test message> ';
         }
         await toLineNotify(testAlarmMsg, sys_config.line_alarm_token);   // test alarm notify
         await toLineNotify(testDailyMsg, sys_config.line_daily_token);   // test daily notify
