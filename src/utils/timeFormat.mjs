@@ -3,6 +3,7 @@ export function convertTimeFormat(time, type='hour') {
     if(type === 'day')
         timeStr += `/${time.getDate()}`;
     else if(type === 'hour')
+        timeStr += `/${time.getDate()}`;
         timeStr += ` ${time.getHours()}:${time.getMinutes()}`;
     return timeStr;
 }
