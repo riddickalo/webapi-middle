@@ -1,10 +1,10 @@
-import { json2csv } from "json-2-csv";
+// import { json2csv } from "json-2-csv";
 import { jsonAsXlsx_config } from "../config/index.mjs";
 import xlsx from "json-as-xlsx";
 import { Op } from "sequelize";
 import Nc_Info from "../models/nc_info.mjs";
 import Prod_Record from "../models/prod_record.mjs";
-import { convertTimeFormat } from "../utils/timeFormat.mjs";
+import { convertTimeFormat, convertMinutesStr } from "../utils/timeFormat.mjs";
 
 // resolve report requests
 export async function getReport(req, res) {
@@ -27,12 +27,13 @@ export async function getReport(req, res) {
             res.end(xlsx(reports, jsonAsXlsx_config));
 
         } else if(query.type[0] === 'item') {
-            let retData = await formItemReport(report_type[1]);
+            // let retData = await formItemReport(report_type[1]);
             const filename = `${req.query.type}_${req.query.endTime}.csv`;
             // response
-            res.header('Content-Type: text/csv; charset=utf-8;');
-            res.attachment(filename);
-            res.status(200).send(json2csv(retData));
+            // res.header('Content-Type: text/csv; charset=utf-8;');
+            // res.attachment(filename);
+            // res.status(200).send(json2csv(retData));
+            res.status(500).send('no item report')
 
         }
     } catch(err) {
@@ -162,7 +163,7 @@ async function formNcReport(query) {
                         ncfile: row.ncfile,
                         startTime: convertTimeFormat(row.startTime, query.type[1]),
                         endTime: convertTimeFormat(row.endTime, query.type[1]),
-                        duration: row.duration,
+                        duration: convertMinutesStr(row.duration),
                     });
                 });
                 // set excel columns
@@ -173,7 +174,7 @@ async function formNcReport(query) {
                     { label: 'NC File', value: 'ncfile' },
                     { label: 'Process Start Time', value: 'startTime' },
                     { label: 'Process End Time', value: 'endTime' },
-                    { label: 'Process Duration (sec)', value: 'duration' },
+                    { label: `Process Duration (min'sec")`, value: 'duration' },
                 ];
                 retData.push({ sheet: nc.nc_id, columns: hourColumns, content: content });
             }

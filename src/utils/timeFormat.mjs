@@ -7,3 +7,9 @@ export function convertTimeFormat(time, type='hour') {
         timeStr += ` ${time.getHours()}:${time.getMinutes()}`;
     return timeStr;
 }
+
+export function convertMinutesStr(secTime) {
+    const mins = Math.floor(secTime / 60);
+    const secs = secTime % 60;
+    return `${mins}'${secs}"`;
+}
