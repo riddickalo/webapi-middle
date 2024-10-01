@@ -9,7 +9,16 @@ export function convertTimeFormat(time, type='hour') {
 }
 
 export function convertMinutesStr(secTime) {
-    const mins = Math.floor(secTime / 60);
-    const secs = secTime % 60;
-    return `${mins}'${secs}"`;
+    const hrs = Math.floor(secTime/ 3600);
+    let mins = Math.floor(secTime / 60);
+    let secs = secTime % 60;
+    
+    if(hrs > 0) {
+        mins = Math.floor((secTime % 3600) / 60);
+        return `${hrs}h ${mins}m ${secs}s`;
+    } else if(hrs <= 0 && mins > 0) {
+        return `${mins}m ${secs}s`;
+    } else {
+        return `${secs}s`;
+    }
 }
