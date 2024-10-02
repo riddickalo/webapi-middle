@@ -9,11 +9,11 @@
 - PostgreSQL 15.8
 
 ## Installation
-**Initialize databse**  
+**Initialize database**  
 ```sh
 psql -U <superuser> -d postgres -f "./psql_script.txt"
 ```
-**Build Environment**
+**Build environment**
 ```sh
 npm install
 ```
@@ -28,4 +28,4 @@ npm run start
 ```
 
 ## Enjoy the service~
-[Open pages on browser (default port no.=5001)](http://localhost:5001)
+[Open pages on browser (default on port 5001)](http://localhost:5001)
