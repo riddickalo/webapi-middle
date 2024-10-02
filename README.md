@@ -1,4 +1,31 @@
 # JackTech WarRoom Middle Server
-1. Collecting data from FOCAS monitor
-2. Calculating
-3. Translate and send to front-end
+## Introduction
+1. Retrieve device-events from FOCAS monitor
+2. Process data
+3. Serve api and views
+
+## Dependencies
+- Node.js v18.20
+- PostgreSQL 15.8
+
+## Installation
+**Initialize databse**  
+```sh
+psql -U <superuser> -d postgres -f "./psql_script.txt"
+```
+**Build Environment**
+```sh
+npm install
+```
+**Fetch front-end project**
+```sh  
+npm run clone-pages         # for linux-like os
+npm run clone-pages-win     # for win os
+```
+**Start server**
+```sh
+npm run start
+```
+
+## Enjoy the service~
+[Open pages on browser (default port no.=5001)](http://localhost:5001)
