@@ -9,6 +9,8 @@ import report_routes from './routes/report.mjs'
 import cors from 'cors';
 import path from 'path';
 import './bin/www.mjs';
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from './config/swagger.mjs';
 
 
 export const middle_app = express();
@@ -21,12 +23,16 @@ middle_app.use(express.json());
 middle_app.use(express.urlencoded({ extended: true }));
 middle_app.use(cors(config.corsOption));
 
+// routing
 middle_app.get('/', (_, res) => res.redirect('/views'));        // redirect from '/' to '/views'
 middle_app.use(express.static(path.join(__dirname, 'src/views')));
 middle_app.use('/views', view_routes);
 
 middle_app.use('/api', api_routes);
-middle_app.use('/report', report_routes)
+middle_app.use('/report', report_routes);
+
+// swagger ui setting
+middle_app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = config.port;
 

@@ -14,11 +14,13 @@
     "nodemon": "^3.1.4",
     "pg": "^8.12.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "type": "module",
   "name": "webapi-middle-server",
-  "version": "v1.0.0",
+  "version": "v1.1.0",
   "main": "index.js",
   "scripts": {
     "initialize-server": "node -r dotenv/config ./src/bin/initialize.mjs dotenv_config_path=.env.dev",
@@ -28,7 +30,7 @@
     "clone-pages-win": "cd src/ && rd /s /q views && git clone -b gh-pages https://github.com/riddickalo/webapi-react.git views",
     "clone-pages": "mkdir -p src/views && rm -rf src/views/ && git clone -b gh-pages https://github.com/riddickalo/webapi-react.git src/views",
     "get-views": "mkdir -p src/views && cp -rfv ../webapi-react/build/* ./src/views/"
-  },
+    },
   "license": "MIT",
   "devDependencies": {
     "pkg": "^5.8.1"
