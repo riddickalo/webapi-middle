@@ -27,5 +27,7 @@ npm run clone-pages-win     # for win os
 npm run start
 ```
 
-## Enjoy the service~
-[Open pages on browser (default on port 5001)](http://localhost:5001)
+## Start using WarRoom~
+[Open pages on browser (default on port 5001)](http://localhost:5001)  
+The api documentation that follows OpenAPI v3.0 specification serves on
+[/api-docs](http://localhost:5001/api-docs)

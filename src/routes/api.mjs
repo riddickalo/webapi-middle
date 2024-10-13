@@ -154,10 +154,85 @@ export default router;
  *              description: no setting found
  * /api/maintain:
  *  get:
- *      summary: get all maintain items of one machine
+ *      summary: get maintain items and records
  *      responses: 
  *          200:
- *              description: return maintain items and records in array
+ *              description: return maintain items and records in array, it can be all data or for one machine
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              items:
+ *                                  type: array
+ *                                  items:
+ *                                      type: object
+ *                                      properties:
+ *                                          sn:
+ *                                              type: integer
+ *                                              description: maintain item identity no.
+ *                                              example: 11
+ *                                          nc_id:
+ *                                              type: string
+ *                                              description: which machine
+ *                                              example: 'NC-700-E'
+ *                                          item:
+ *                                              type: string
+ *                                              description: item title
+ *                                              example: change oil
+ *                                          period:
+ *                                              type: integer
+ *                                              description: maintainence period (day)
+ *                                              example: 20
+ *                                          enable:
+ *                                              type: boolean
+ *                                              description: the maintain item status
+ *                                              example: true
+ *                                          status:
+ *                                              type: integer
+ *                                              description: maintain status. 0 means disable, 1 means shceduled, 2 means due on, 3 means expired
+ *                                              example: 1
+ *                                          scheduled_check_time:
+ *                                              type: string
+ *                                              format: date-time
+ *                                              description: next maintainence time
+ *                                          last_check_time:
+ *                                              type: string
+ *                                              format: date-time
+ *                                              description: last maintainence check timestamp
+ *                              records:
+ *                                  type: array
+ *                                  items:
+ *                                      type: object
+ *                                      properties:
+ *                                          sn:
+ *                                              type: integer
+ *                                              description: maintain records identity no.
+ *                                              example: 102
+ *                                          item:
+ *                                              type: string
+ *                                              description: item title
+ *                                              example: change oil
+ *                                          nc_id:
+ *                                              type: string
+ *                                              description: which machine
+ *                                              example: 'NC-700-E'
+ *                                          status:
+ *                                              type: integer
+ *                                              description: maintain item status at the time when record was created
+ *                                              example: 2
+ *                                          worker:
+ *                                              type: string
+ *                                              description: the record was created by which account (according to login account)
+ *                                              example: 'admin'
+ *                                          scheduled_check_time:
+ *                                              type: string
+ *                                              description: the scheduled time to maintain
+ *                                              format: date-time
+ *                                          actual_check_time:
+ *                                              type: string
+ *                                              format: date-time
+ *                                              description: the actual maintainence timestamp 
  *          400: 
  *              description: no maintain data found
  *          500: 
@@ -169,8 +244,51 @@ export default router;
  *            type: string
  *            in: path
  *            required: true
- *            description: set 'update-item' for updating maintain item, 'create-record' for creating new maintain record
- *  delete:
+ *            description: set 'update-item' for updating maintain item, 'create-record' for creating a new maintain record
+ *      requestBody:
+ *          content:
+ *              application/json:
+ *                  schema: 
+ *                      type: object
+ *                      properties:
+ *                          sn:
+ *                              type: integer
+ *                              description: maintain item identity no.
+ *                              example: 11
+ *                          nc_id:
+ *                              type: string
+ *                              description: which machine
+ *                              example: 'NC-700-E'
+ *                          item:
+ *                              type: string
+ *                              description: item title
+ *                              example: change oil
+ *                          period:
+ *                              type: integer
+ *                              description: maintainence period (day)
+ *                              example: 20
+ *                          enable:
+ *                              type: boolean
+ *                              description: the maintain item status
+ *                              example: true
+ *                          status:
+ *                              type: integer
+ *                              description: maintain status. 0 means disable, 1 means shceduled, 2 means due on, 3 means expired
+ *                              example: 1
+ *                          scheduled_check_time:
+ *                              type: string
+ *                              format: date-time
+ *                              description: next maintainence time
+ *                          last_check_time:
+ *                              type: string
+ *                              format: date-time
+ *                              description: last maintainence check timestamp
+ *      responses:
+ *          200:
+ *              description: return new maintain items and records
+ *          500:
+ *              description: server internal error 
+ * delete:
  *      summary: delete maintain item
  *      parameters:
  *          - name: itemSN
