@@ -36,10 +36,10 @@ Utilize_updateRule.minute = (() => {
     return rule; 
 })();
 
-if(process.env.RUN_ENV !== 'local'){
+// if(process.env.RUN_ENV !== 'local'){
     const Utilize_updateJob = scheduler.scheduleJob(Utilize_updateRule, 
         () => updateUtilize());
-}
+// }
 
 // 日產量通知
 export const LineDaily_notifyRule = new scheduler.RecurrenceRule();

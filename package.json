@@ -12,22 +12,25 @@
     "node-schedule": "^2.1.1",
     "pg": "^8.12.0",
     "pg-hstore": "^2.3.4",
+    "pm2": "^5.4.2",
     "sequelize": "^6.37.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
   "type": "module",
   "name": "webapi-middle-server",
-  "version": "v1.1.1",
+  "version": "v1.2.0",
   "main": "index.js",
   "scripts": {
     "initialize-server": "node -r dotenv/config ./src/bin/initialize.mjs dotenv_config_path=.env.dev",
     "dev-start": "nodemon -r dotenv/config index.js dotenv_config_path=.env.dev",
-    "start": "node -r dotenv/config index.js dotenv_config_path=.env && exit 1",
+    "start": "pm2 start ecosystem.config.cjs --env development",
     "build-app": "esbuild index.js --outfile=build/lib/index.cjs --bundle --platform=node && pkg build/lib/index.cjs -c package.json -o build/webapi-middle",
     "clone-pages-win": "cd src/ && rd /s /q views && git clone -b gh-pages https://github.com/riddickalo/webapi-react.git views",
     "clone-pages": "mkdir -p src/views && rm -rf src/views/ && git clone -b gh-pages https://github.com/riddickalo/webapi-react.git src/views",
-    "get-views": "mkdir -p src/views && cp -rfv ../webapi-react/build/* ./src/views/"
+    "get-views": "mkdir -p src/views && cp -rfv ../webapi-react/build/* ./src/views/",
+    "stop": "pm2 delete 0",
+    "pm2-monitor": "pm2 monit"
   },
   "license": "MIT",
   "devDependencies": {

@@ -11,18 +11,19 @@
 ## Installation
 **Initialize database**  
 ```sh
-psql -U <superuser> -d postgres -f "./psql_script.txt"
+psql -U <superuser> -f "./psql_script.txt"
+# you may need the su password then
 ```
 **Build environment**
 ```sh
-npm install
+npm install --prodcution
 ```
 **Fetch front-end project**
 ```sh  
 npm run clone-pages         # for linux-like os
 npm run clone-pages-win     # for win os
 ```
-**Start server**
+**Start service**
 ```sh
 npm run start
 ```

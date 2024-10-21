@@ -1,5 +1,6 @@
 create database webapi;
+\c webapi;
 create user agent;
-alter user agent with password "113090";
+alter user agent with password '113090';
 grant all on schema public to agent;
 grant all on all tables in schema public to agent;
