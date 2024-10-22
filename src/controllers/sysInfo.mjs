@@ -14,7 +14,7 @@ export async function getSettingParams(req, res) {
             logger.debug('get setting: ', setting);
             res.status(200).send(setting);
         }).catch(err => {
-            logger.info('in getSettingParams()', err);
+            logger.warn('in getSettingParams()', err);
             res.status(404).send(err);
         });
 }
@@ -34,7 +34,7 @@ export async function setSettingParams(req, res) {
                 res.status(200).send(newSetting);
             });
         }).catch(err => {
-            logger.info('in setSettingParams()', err);
+            logger.warn('in setSettingParams()', err);
             res.status(404).send(err);
         });
 }

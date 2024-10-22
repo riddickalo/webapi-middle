@@ -29,7 +29,7 @@ export async function getUtilize(ncData, time) {
         logger.debug('retData in utilize(): ', retData);  
     }).catch(err => {
         retData = err
-        logger.info('in utilize(): ', err);
+        logger.warn('in utilize(): ', err);
     });
 
     if(typeof retData === 'number' && isFinite(retData)) {      // isNumber()

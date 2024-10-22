@@ -10,7 +10,7 @@ export async function getStatus(req, res) {
             logger.debug('getStatus() called', ret_data);
         }).catch(({original, }) => {
             res.status(404).send(original.error);
-            logger.debug('getStatus() called', original.error);
+            logger.warn('getStatus() called', original.error);
         });
 }
 
@@ -26,7 +26,7 @@ export async function setNcAttr(req, res) { // 一次僅設定一筆
                             .catch(err => res.status(500).send(err));
         }).catch(err => {
             res.status(404).send(err);
-            logger.debug('setNcAttr() called', err);
+            logger.warn('setNcAttr() called', err);
         });
 }
 
@@ -49,7 +49,7 @@ export async function getAlarm(req, res) {
         res.status(200).send(retData);
         logger.debug('getAlarm() called', retData);
     } catch(err) {
-        logger.info('getAlarm() called', err);
+        logger.warn('getAlarm() called', err);
         res.status(400).send(err);
     }        
 }
