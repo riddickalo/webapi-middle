@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import logger from "../utils/logger.mjs";
 import orm_agent from "../models/orm_agent.mjs";
 import Alarm from '../models/alarm.mjs';
 import Nc_Info from "../models/nc_info.mjs";
@@ -14,14 +15,14 @@ import '../controllers/scheduler.mjs';
 
 (async() => {
     try{
-        await orm_agent.sync({ alter: true }).then(() => console.info('ORM model sync'));
+        await orm_agent.sync({ alter: true }).then(() => logger.verbose('ORM model sync'));
         await Setting.findOrCreate({ where: { index: true } })
                             .then(([ret,]) => {
                                 settingUpdateHook(ret);
-                                console.log('Settings initialized...');
+                                logger.verbose('Settings initialized...');
                             });
         
     } catch(err) {
-        console.error(err);
+        logger.warn(err);
     }   
 })();

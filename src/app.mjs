@@ -1,6 +1,7 @@
 import express from 'express';
 import compression from 'compression';
 import helmet from 'helmet';
+import logger from './utils/logger.mjs';
 import { createServer } from 'http';
 import { config, __dirname } from './config/index.mjs';
 import api_routes from './routes/api.mjs';
@@ -37,6 +38,6 @@ middle_app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 const PORT = config.port;
 
 createServer(middle_app).listen(PORT, 
-        () => console.info(`webapi-middle app is running on ${PORT}`));
+        () => logger.verbose(`webapi-middle app is running on ${PORT}`));
 
 

@@ -1,4 +1,5 @@
 import Prod_Record from "../models/prod_record.mjs";
+import logger from "../utils/logger.mjs";
 import { Op } from "sequelize";
 
 export async function getUtilize(ncData, time) {
@@ -19,15 +20,17 @@ export async function getUtilize(ncData, time) {
         retData = 0;
         for (let record of records) {     
             if(record.valid_flag === 1)
-                // console.log(record.duration);
                 retData += record.duration;
         }
 
         if(records[0] && records[0].valid_flag === null) {     // 計算當前尚未結案的生產紀錄
             retData += (time.getTime() - records[0].startTime.getTime()) / 1000;
         }
-        // console.log('retData', retData);  
-    }).catch(err => retData = err);
+        logger.debug('retData in utilize(): ', retData);  
+    }).catch(err => {
+        retData = err
+        logger.info('in utilize(): ', err);
+    });
 
     if(typeof retData === 'number' && isFinite(retData)) {      // isNumber()
         // 回傳稼動率，86400 sec/day

@@ -1,5 +1,6 @@
 import Alarm from "../models/alarm.mjs";
 import { alarmDetectHook } from "../utils/hooks.mjs";
+import logger from "../utils/logger.mjs";
 
 // create an alarm record
 export async function createAlarm(currData, status) {
@@ -10,10 +11,11 @@ export async function createAlarm(currData, status) {
                             alarm_type: status,
                             alarm_timestamp: currData.timestamp,
                         });
-        // console.log(ret)
+        logger.debug(`Alarm created: ${ret}`);
         alarmDetectHook(ret);       // send message hook
         return Promise.resolve(ret);
     } catch(err) {
+        logger.info('in createAlarm()', err);
         return Promise.reject(err);
     };        
 };
@@ -29,13 +31,14 @@ export async function closeAlarm(ncInfo) {
             },
             order: [['alarm_timestamp', 'DESC']],
         }).then(async (ret) => {
-            // console.log(ret)
+            logger.debug(`Alarm to close: ${ret}`);
             if(ret) {
                 ret.history_flag = true;
                 ret.save();
             }
         }).then((res) => Promise.resolve(res));
     } catch(err) {
+        logger.info('in closeAlarm()', err);
         return Promise.reject(err);
     }
 };

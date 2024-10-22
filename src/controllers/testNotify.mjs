@@ -1,8 +1,9 @@
 import { testLineFunction } from "../utils/lineNotify.mjs";
+import logger from "../utils/logger.mjs";
 
 export async function testNotify(req, res) {
-    console.log(req.params.type);
     const reqType = req.params.type;
+    logger.http('testNotify: ', reqType);
 
     if(reqType === 'Line') {
         await testLineFunction()

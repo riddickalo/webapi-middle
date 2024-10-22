@@ -1,4 +1,5 @@
 import Prod_Record from "../models/prod_record.mjs";
+import logger from "../utils/logger.mjs";
 
 /* 
 根據狀態變化 修改Prod_Records的生產紀錄
@@ -9,7 +10,7 @@ export async function updateProd(currStatus, currData, prevData=null) {
     try{
         let retData = null;
         if(prevData && prevData.running_flag === 3) {
-            // console.log('update a product record');
+            logger.debug('update a product record: ', currStatus, currData, 'prevData:', prevData);
             await Prod_Record.findAll({
                 where: { nc_id: prevData.nc_id, },
                 order:[['startTime', 'DESC']],
@@ -27,7 +28,7 @@ export async function updateProd(currStatus, currData, prevData=null) {
                 retData = await record.save();
             });
         } else if(!prevData || (prevData.running_flag === 0 && currData.running === 3)) {
-            // console.log('create a product record');
+            logger.debug('create a product record', currData);
             retData = await Prod_Record.create({
                 nc_id: currData.deviceName,
                 ncfile: currData.exeProgName,
@@ -40,6 +41,7 @@ export async function updateProd(currStatus, currData, prevData=null) {
             
         return Promise.resolve(retData);
     } catch(err) {
+        logger.info('in updateProd()', err);
         return Promise.reject(err);
     }
 }

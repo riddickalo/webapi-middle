@@ -2,13 +2,16 @@ import Nc_Info from "../models/nc_info.mjs";
 import Maintain_Item from "../models/maintain_item.mjs";
 import Maintain_Record from "../models/maintain_record.mjs";
 import { convertTimeFormat } from "../utils/timeFormat.mjs";
+import logger from "../utils/logger.mjs";
 
 export async function getMaintainData(req, res) {
-    // console.log('maintain data request ', req.params);
+    logger.http('getMaintainData request', req.params);
     await retrieveMaintainData(req.params.ncId)
         .then(ret => {
             res.status(200).send(ret);
+            logger.debug('getMaintainData() called', ret);
         }).catch(err => {
+            logger.info('getMaintainData() called', err);
             if(err === 'NOT FOUND')
                 res.status(400).send(err);
             else
@@ -17,9 +20,8 @@ export async function getMaintainData(req, res) {
 }
 
 export async function updateMaintainData(req, res) {
-    // console.log('update behavior: ', req.params.behavior);
+    logger.http('updateMaintain request', req.body);
     const query = req.body;
-    // console.log(query)
 
     try{
         if(req.params.behavior === 'update-item') {
@@ -40,13 +42,14 @@ export async function updateMaintainData(req, res) {
 }
 
 export async function deleteMaintainItem(req, res) {
-    console.log(`deleted item_sn: ${req.params.itemSN}`);
+    logger.http(`deleted item_sn: ${req.params.itemSN}`);
 
     await Maintain_Item.destroy({ where: { sn: Number(req.params.itemSN) } })
             .then((num) => {
+                logger.debug(`deleted item_sn: ${req.params.itemSN}`);
                 res.status(200).send(`${num} row deleted`);
             }).catch(err => {
-                console.error(err);
+                logger.info(err);
                 res.status(400).send(err);
             });
 }
@@ -86,9 +89,10 @@ async function updateMaintainItem(query) {
         }
 
         if(updateFlag) await item.save();
+        logger.debug('in updateMaintainItem(), queried item: ', query, 'updated item: ', item);
         return Promise.resolve();
     }).catch(err => {
-        console.error(err);
+        logger.info('in updateMaintainItem() ', err);
         return Promise.reject("ERROR occurred while Updating Maintain_Item");
     });
 }
@@ -117,6 +121,7 @@ async function createMaintainRecord(query) {
                             item.status = 0;
                         }
                         await item.save();
+                        logger.debug('in createMaintainRecord(), queried item: ', item, 'new record: ', newRecord);
                     });
             });
             return Promise.resolve();
@@ -125,7 +130,7 @@ async function createMaintainRecord(query) {
         }
 
     } catch(err) {
-        console.error(err);
+        logger.info('in createMaintainRecord() ', err);
         return Promise.reject("ERROR occurred while Creating Maintain_Record");
     }   
 }
@@ -134,7 +139,7 @@ async function disableMaintainItem(query) {
     try{
         
     } catch(err) {
-        console.error(err);
+        logger.info(err);
         return Promise.reject("ERROR occurred while Disabling Maintain_Item");
     }
 }
@@ -154,7 +159,6 @@ async function retrieveMaintainData(request='all') {
                 include: [{ model: Maintain_Item }, { model: Maintain_Record }],
             });
         }
-        // console.log(rawData)
         if(rawData && rawData.length>0) {
             rawData.map(row => {
                 if(row.Maintain_Items)
@@ -162,13 +166,14 @@ async function retrieveMaintainData(request='all') {
                 if(row.Maintain_Records)
                     retData.records.push(...row.Maintain_Records);
             });
+            logger.debug('in retrieveMaintainData() ', retData);
             return Promise.resolve(retData);
 
         } else {
             return Promise.reject('NOT FOUND');
         }        
     } catch(err) {
-        console.error(err);
+        logger.info('in retrieveMaintainData() ', err);
         return Promise.reject(err);
     }
 }
@@ -186,10 +191,11 @@ export async function updateNcMaintainStatus(NcId) {
         });
         const status = (statusList.length > 0)? Math.max(...statusList): 0;
         const applied_row = await Nc_Info.update({ maintainStatus: status }, { where: { nc_id: NcId } });
+        logger.debug('in updateNcMaintainStatus(), applied row: ', applied_row, 'statusList: ', statusList);
         return Promise.resolve(applied_row);
 
     } catch(err) {
-        console.error(err);
+        logger.info(err);
         return Promise.reject('ERROR occurred while Updating Nc_Infos maintainStatus');
     }
 }

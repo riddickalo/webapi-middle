@@ -10,6 +10,7 @@ import { getUtilize } from './utilize.mjs';
 import { __dirname } from '../config/index.mjs';
 import { sendLineDaily } from '../utils/lineNotify.mjs';
 import { updateNcMaintainStatus } from './maintain.mjs';
+import logger from '../utils/logger.mjs';
 
 // FOCAS同步資料
 export async function getDeviceEvents() {
@@ -31,17 +32,17 @@ export async function getDeviceEvents() {
             eventData = eventData.slice(0);
         } else {        // normal sync
             let startTime = queryStartTime(new Date());
-            console.log(`GET data from ${process.env.FOCAS_URL} at ${startTime}`);
-            // console.info(req);
+            logger.http(`GET data from ${process.env.FOCAS_URL} at ${startTime}`);
             const axiosResp = await axios.get(process.env.FOCAS_URL, { params: {startTime: startTime} });
             eventData = axiosResp.data;
+            logger.debug(`GET data from ${process.env.FOCAS_URL} at ${startTime} success`, eventData);
         }
 
         await updateDeviceEvents(eventData);
         return Promise.resolve();
         
     } catch(err) {
-        console.error(err);
+        logger.info('in gerDeviceEvents()', err);
         return Promise.reject(err);
     }
 }
@@ -53,14 +54,14 @@ export async function updateUtilize() {
         const currTime = new Date();
         for(let nc of nc_list) {
             await getUtilize(nc, currTime).then((rate) => {
-                // console.log(rate);
+                logger.debug(`nc_id: ${nc.nc_id}, utilize_rate: ${rate}`);
                 nc.utilize_rate = rate;
                 nc.save()
             });
         }
         return Promise.resolve();
     } catch(err) {
-        console.error(err);
+        logger.info('in updateUtilize()', err);
         return Promise.reject(err);
     }
 }
@@ -97,9 +98,11 @@ export async function formDailyLineReport() {
             results.push(result);
         });
 
+        logger.debug('daily report:', results, 'at', currTime);
         sendLineDaily(results, currTime);
         return Promise.resolve();
     } catch(err) {
+        logger.info('in formDailyLineReport()', err);
         return Promise.reject(err);
     }
 }
@@ -110,7 +113,7 @@ export async function checkMaintainItems() {
     const today = new Date();
     const range = new Date(today);
     range.setDate(today.getDate() + 1);
-    console.log(today);
+    logger.debug(`checkMaintainItem, today: ${today}, range: ${range}`);
 
     try{
         // step 1, find all nc
@@ -121,7 +124,7 @@ export async function checkMaintainItems() {
                     .then(async items => {
                         // step 3, check scheduled time 
                         items.forEach(async item => {
-                            console.log(item)
+                            logger.debug(`nc_id: ${nc.nc_id}, item_id: ${item.item_id}, scheduled_check_time: ${item.scheduled_check_time}`);
                             // step 4, set status if exceeded
                             if(item.scheduled_check_time < today) item.status = 3;
                             else if(item.scheduled_check_time < range && item.scheduled_check_time >= today) item.status = 2;
@@ -135,6 +138,6 @@ export async function checkMaintainItems() {
             }
         })
     } catch(err) {
-        console.error(err);
+        logger.info('in checkMaintainItems()', err);
     }
 }

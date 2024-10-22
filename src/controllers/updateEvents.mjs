@@ -3,9 +3,11 @@ import Alarm from "../models/alarm.mjs";
 import { updateProd } from "./setProd.mjs";
 import { createAlarm, closeAlarm } from "./setAlarm.mjs";
 import { getOpStatus } from "../utils/translateStatus.mjs";
+import logger from "../utils/logger.mjs";
 
 export async function updateDeviceEvents(eventData) {
     try{
+        logger.debug('updating device-events: ', eventData);
         for(let row of eventData) {
             const rowStatus = getOpStatus(row);
             await Nc_Info.findOrCreate({
@@ -45,7 +47,7 @@ export async function updateDeviceEvents(eventData) {
 
         return Promise.resolve();
     } catch(err) {
-        console.error(err);
+        logger.info('in updateDeviceEvents(): ', err);
         return Promise.reject(err);
     }
 }

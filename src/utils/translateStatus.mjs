@@ -17,12 +17,6 @@ export function getOpStatus(rawData) {
     }
 }
 
-// 轉換廠區
-export function setRegion(rawData) {
-
-}
-
-
 // const opStatus = [
 //     { code: 0, key: 'all', value: '全部' },
 //     { code: 1, key: 'warning', value: '警告' },

@@ -6,6 +6,7 @@ import Setting from "../models/setting.mjs";
 import '../models/associations.mjs';
 import { settingUpdateHook } from "../utils/hooks.mjs";
 import { getDeviceEvents, updateUtilize } from "../controllers/scheduledJobs.mjs";
+import logger from "../utils/logger.mjs";
 
 (async() => {
     // initialize db and sync all device events
@@ -13,22 +14,22 @@ import { getDeviceEvents, updateUtilize } from "../controllers/scheduledJobs.mjs
     try{
         if(mode === 'initialize' || mode === 'test') {
             await orm_agent.sync({ force: true })
-                            .then(() => console.log('ORM model initialized...'));
+                            .then(() => logger.debug('ORM model initialized...'));
 
             await Setting.findOrCreate({ where: { index: true } })
                             .then(([ret,]) => {
                                 settingUpdateHook(ret);
-                                console.log('Settings initialized...');
+                                logger.debug('Settings initialized...');
                             });
 
-            await getDeviceEvents().then(() => console.log('Device events initialized...'));
+            await getDeviceEvents().then(() => logger.debug('Device events initialized...'));
 
             if(mode === 'test')
-                await updateUtilize().then(() => console.log('Utilize rate updated...'));
+                await updateUtilize().then(() => logger.debug('Utilize rate updated...'));
         } else {
             throw 'wrong env for initializing';
         }
-        console.log('All works done~');
+        logger.debug('All works done~');
         process.exit();
         
     } catch(err) {

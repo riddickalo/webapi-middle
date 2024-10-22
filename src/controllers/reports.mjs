@@ -5,6 +5,7 @@ import { Op } from "sequelize";
 import Nc_Info from "../models/nc_info.mjs";
 import Prod_Record from "../models/prod_record.mjs";
 import { convertTimeFormat, convertMinutesStr } from "../utils/timeFormat.mjs";
+import logger from "../utils/logger.mjs";
 
 // resolve report requests
 export async function getReport(req, res) {
@@ -13,11 +14,11 @@ export async function getReport(req, res) {
         startTime: req.query.startTime.split('-'),
         endTime: req.query.endTime.split('-'),
     };
-
+    logger.http(`report request: ${query.type[0]} report from ${query.startTime} to ${query.endTime}`);
     try{
         if(query.type[0] === 'nc') {
             const [reports, _] = await formNcReport(query);
-            // console.log(reports)
+            logger.debug(`nc report: ${reports}`);
 
             // response
             res.writeHead(200, {
@@ -37,7 +38,7 @@ export async function getReport(req, res) {
 
         }
     } catch(err) {
-        console.error(err);
+        logger.info(`report request failed: ${err}`);
         res.status(500).send(err);
     }
 }
@@ -179,10 +180,10 @@ async function formNcReport(query) {
                 retData.push({ sheet: nc.nc_id, columns: hourColumns, content: content });
             }
         }
-        // console.log(retData[0]);
+        logger.debug(`formNcReport: ${retData}`);
         return Promise.resolve([retData, filename]);
     } catch(err) {
-        console.error(err);
+        logger.info(`formNcReport failed: ${err}`);
         return Promise.reject();
     }
 }
@@ -207,7 +208,7 @@ async function formItemReport(query) {
         rawData.map(row => retData.push(row.dataValues));
         return retData;
     } catch(err) {
-        console.error(err);
+        logger.info(err);
     }
 }
 

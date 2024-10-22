@@ -1,8 +1,9 @@
 import * as scheduler from 'node-schedule';
 import { sys_config, maintain_config } from '../config/index.mjs';
 import { getDeviceEvents, updateUtilize, formDailyLineReport, checkMaintainItems } from './scheduledJobs.mjs';
+import logger from '../utils/logger.mjs';
 
-console.info('Scheduler mounted');
+logger.verbose('Scheduler mounting...');
 
 // FOCAS 更新資料頻率
 // mount scheduler only under active sync mode
@@ -36,10 +37,10 @@ Utilize_updateRule.minute = (() => {
     return rule; 
 })();
 
-// if(process.env.RUN_ENV !== 'local'){
+if(process.env.RUN_ENV !== 'local'){
     const Utilize_updateJob = scheduler.scheduleJob(Utilize_updateRule, 
         () => updateUtilize());
-// }
+}
 
 // 日產量通知
 export const LineDaily_notifyRule = new scheduler.RecurrenceRule();

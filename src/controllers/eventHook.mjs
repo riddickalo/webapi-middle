@@ -1,4 +1,5 @@
 import { updateDeviceEvents } from "./updateEvents.mjs";
+import logger from "../utils/logger.mjs";
 
 export async function deviceEventsHook(req, res) {
     const sync_mode = process.env.FOCAS_SYNC_MODE || 'active';
@@ -8,7 +9,7 @@ export async function deviceEventsHook(req, res) {
             await updateDeviceEvents(reqData)
                 .then(() => res.status(204).send())
                 .catch(err => {
-                    console.error(err);
+                    logger.info(err);
                     res.status(500).send(err);
                 });
         } else {
@@ -17,5 +18,6 @@ export async function deviceEventsHook(req, res) {
 
     } else {
         res.status(500).send('middle server is not running under passive mode');
+        logger.info('middle server is not running under passive mode');
     }
 }

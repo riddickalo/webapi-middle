@@ -1,4 +1,5 @@
 import { sys_config } from "../config/index.mjs";
+import logger from "./logger.mjs";
 
 export async function sendLineDaily(contents, timestamp) {
     try{
@@ -13,10 +14,11 @@ export async function sendLineDaily(contents, timestamp) {
             total_amount += item.prod_count;
         }
         msg += `日產量總計: ${total_amount}`;
+        logger.debug('daily msg: ', msg);
         
         await toLineNotify(msg, sys_config.line_daily_token);
     } catch(err) {
-        console.error(err);
+        logger.info(err);
     }
 }
 
@@ -40,10 +42,10 @@ export async function sendLineAlarm(content) {
             if(content.alarm_msg !== null) msg += `因 ${content.alarm_msg} \n`;
             msg += `發生警報，請盡快派工處理！`;
         }
-        // console.log(msg)
+        logger.debug('alarm msg: ', msg);
         await toLineNotify(msg, sys_config.line_alarm_token);
     } catch(err) {
-        console.error(err);
+        logger.info(err);
     }
 }
 
@@ -62,7 +64,7 @@ export async function testLineFunction() {
         return Promise.resolve();
 
     } catch(err) {
-        console.error(err);
+        logger.info(err);
         return Promise.reject(err);
     }
 }
@@ -77,6 +79,11 @@ async function toLineNotify(msg, token) {
     }        
 
     const resp = await fetch(lineNotifyUrl, { method: "POST", headers: header, body: `message=${msg}` });
-    if(resp.status < 300) return Promise.resolve(resp.status);
-    else return Promise.reject([resp.status, msg]);
+    if(resp.status < 300) {
+        logger.debug('lineNotify success: ', resp.status);
+        return Promise.resolve(resp.status);
+    } else {
+        logger.info('lineNotify failed: ', resp);
+        return Promise.reject([resp.status, msg]);
+    }
 }
