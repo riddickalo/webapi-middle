@@ -120,7 +120,8 @@ export async function checkMaintainItems() {
         await Nc_Info.findAll({ attributes: ['nc_id', 'maintainStatus'] }).then(async ncList => {
             for(let nc of ncList) {
                 // step 2, find all items per nc
-                await Maintain_Item.findAll({ where: { nc_id: nc.nc_id, enable: true } })
+                await Maintain_Item.findAll({ 
+                    where: { nc_id: nc.nc_id, status: { [Op.gte]: 1 } } })
                     .then(async items => {
                         // step 3, check scheduled time 
                         items.forEach(async item => {

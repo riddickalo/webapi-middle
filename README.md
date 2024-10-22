@@ -26,6 +26,12 @@ npm run clone-pages-win     # for win os
 **Start service**
 ```sh
 npm run start
+# or
+./run.sh --start
+
+
+# stop the service
+./run.sh --stop
 ```
 
 ## Start using WarRoom~
