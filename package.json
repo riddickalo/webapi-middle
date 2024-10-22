@@ -26,7 +26,7 @@
   "scripts": {
     "initialize-server": "node -r dotenv/config ./src/bin/initialize.mjs dotenv_config_path=.env.dev",
     "dev-start": "nodemon -r dotenv/config index.js dotenv_config_path=.env.dev",
-    "start": "pm2 start ecosystem.config.cjs --env development",
+    "start": "pm2 start ecosystem.config.cjs --env production",
     "build-app": "esbuild index.js --outfile=build/lib/index.cjs --bundle --platform=node && pkg build/lib/index.cjs -c package.json -o build/webapi-middle",
     "clone-pages-win": "cd src/ && rd /s /q views && git clone -b gh-pages https://github.com/riddickalo/webapi-react.git views",
     "clone-pages": "mkdir -p src/views && rm -rf src/views/ && git clone -b gh-pages https://github.com/riddickalo/webapi-react.git src/views",
