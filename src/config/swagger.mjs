@@ -1,11 +1,12 @@
 import swaggerJSDoc from "swagger-jsdoc";
+import pckInfo from '../../package.json' assert { type: 'json' };
 import { __dirname } from "./index.mjs";
 
 const swaggerDefinition = {
     openapi: '3.0.0',
     info: {
         title: 'webapi middle server',
-        version: 'v1.1.0',
+        version: pckInfo.version,
         summary: 'middle server api docs',
         description: 'back-end api docs follows the OpenAPI',
     },
