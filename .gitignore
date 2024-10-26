@@ -3,6 +3,7 @@ server/
 src/views/
 device_events.json
 *.xlsx
+.DS_Store
 
 # env
 .env.dev
@@ -20,3 +21,6 @@ logs/
 
 # build
 build/
+
+# cert
+*.pem

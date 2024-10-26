@@ -7,7 +7,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "helmet": "^7.1.0",
-    "http": "^0.0.1-security",
+    "https": "^1.0.0",
     "json-as-xlsx": "^2.5.6",
     "node-schedule": "^2.1.1",
     "pg": "^8.12.0",
@@ -21,7 +21,7 @@
   },
   "type": "module",
   "name": "webapi-middle-server",
-  "version": "v1.3.0",
+  "version": "v1.4.0",
   "main": "index.js",
   "scripts": {
     "initialize-server": "node -r dotenv/config ./src/bin/initialize.mjs dotenv_config_path=.env.dev",
@@ -37,6 +37,7 @@
   "license": "MIT",
   "devDependencies": {
     "esbuild": "^0.24.0",
+    "http": "^0.0.1-security",
     "nodemon": "^3.1.7",
     "pkg": "^5.8.1"
   },
