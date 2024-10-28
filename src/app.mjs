@@ -39,12 +39,11 @@ middle_app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = config.port;
 
-const httpsOptions = {
-    key: fs.readFileSync(path.join(__dirname, 'ssl/key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, 'ssl/cert.pem')),
-}
-
 if(env === 'production') {
+        const httpsOptions = {
+                key: fs.readFileSync(path.join(__dirname, 'ssl/key.pem')),
+                cert: fs.readFileSync(path.join(__dirname, 'ssl/cert.pem')),
+            };
         https.createServer(httpsOptions, middle_app).listen(PORT, 
                 () => logger.verbose(`webapi-middle app is running on ${PORT} through HTTPS`));
 } else {
