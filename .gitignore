@@ -4,6 +4,7 @@ src/views/
 device_events.json
 *.xlsx
 .DS_Store
+.greenlock*
 
 # env
 .env.dev
